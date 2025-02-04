@@ -9,7 +9,7 @@ import org.mapstruct.ReportingPolicy;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring")
 public interface PostImageMapper {
     @Mapping(source = "imageUrl", target = "imageUrl")
     @Mapping(source = "post", target = "post")
