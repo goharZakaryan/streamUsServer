@@ -9,9 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@NoArgsConstructor
-@Setter
-@Getter
+
 @Table(name = "userProfile")
 public class UserProfile {
     @Id
@@ -158,5 +156,85 @@ public class UserProfile {
 
     public void setFcm_regId(String fcm_regId) {
         this.fcm_regId = fcm_regId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public int getFollowingsCount() {
+        return followingsCount;
+    }
+
+    public void setFollowingsCount(int followingsCount) {
+        this.followingsCount = followingsCount;
+    }
+
+    public int getFollowersCount() {
+        return followersCount;
+    }
+
+    public void setFollowersCount(int followersCount) {
+        this.followersCount = followersCount;
+    }
+
+    public Set<UserProfile> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(Set<UserProfile> friends) {
+        this.friends = friends;
     }
 }
