@@ -1,6 +1,7 @@
 package com.example.streamusserver.post.dto;
 
 import java.util.List;
+import java.util.Map;
 
 public class PostRequestDto {
     private long accountId;
@@ -17,9 +18,11 @@ public class PostRequestDto {
     private double postLat;
     private double postLng;
     private int feeling;
-    private List<String> images;
+    private List< String> images;
     private String videoImgUrl;
     private String videoUrl;
+
+
 
     public long getAccountId() {
         return accountId;
@@ -137,7 +140,7 @@ public class PostRequestDto {
         return images;
     }
 
-    public void setImages(List<String> images) {
+    public void setImages(List< String> images) {
         this.images = images;
     }
 
@@ -157,3 +160,5 @@ public class PostRequestDto {
         this.videoUrl = videoUrl;
     }
 }
+
+

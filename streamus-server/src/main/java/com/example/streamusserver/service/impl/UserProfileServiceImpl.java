@@ -204,11 +204,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         return new ProfileResponseDto(false, 200, "Authorization successful", Collections.singletonList(accountDetails), userProfile.getId());
     }
 
-//    public validateToken() {
-//        if (!jwtUtil.isTokenValid(requestDto.getAccessToken())) {
-//            return new ProfileResponseDto(true, 401, "Invalid or expired token", null, null);
-//        }
-//    }
+//
 
     /**
      * Save uploaded profile image.
@@ -216,28 +212,6 @@ public class UserProfileServiceImpl implements UserProfileService {
      * @param file Uploaded image file
      * @return Image file name or empty string if no file
      */
-    public String saveImage(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            return "";
-        }
-
-        try {
-            // Ensure directory exists
-            Path uploadPath = Paths.get(sourceDir).toAbsolutePath().normalize();
-            Files.createDirectories(uploadPath);
-
-            // Generate unique filename
-            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            Path targetLocation = uploadPath.resolve(fileName);
-
-            // Copy file to target location
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-
-            return fileName;
-        } catch (IOException ex) {
-            throw new RuntimeException("Could not store file " + file.getOriginalFilename(), ex);
-        }
-    }
 
     /**
      * Map UserProfile to ProfileResponseDto.
