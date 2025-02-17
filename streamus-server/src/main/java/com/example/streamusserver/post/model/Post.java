@@ -4,6 +4,7 @@ import com.example.streamusserver.model.UserProfile;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -27,10 +28,23 @@ public class Post {
     private double postLat;
     private double postLng;
     private int feeling;
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<PostImage> images;
+    @OneToMany()
+    private List<MediaItem> mediaItem;
     private String videoImgUrl;
     private String videoUrl;
+    private LocalDate createdAt;
+
+    public int getRePostsCount() {
+        return rePostsCount;
+    }
+
+    public void setRePostsCount(int rePostsCount) {
+        this.rePostsCount = rePostsCount;
+    }
+
+    private int rePostsCount;
+
+
 
     public Long getId() {
         return id;
@@ -152,12 +166,12 @@ public class Post {
         this.feeling = feeling;
     }
 
-    public List<PostImage> getImages() {
-        return images;
+    public List<MediaItem> getMediaItem() {
+        return mediaItem;
     }
 
-    public void setImages(List<PostImage> images) {
-        this.images = images;
+    public void setMediaItem(List<MediaItem> mediaItem) {
+        this.mediaItem = mediaItem;
     }
 
     public String getVideoImgUrl() {
@@ -174,5 +188,13 @@ public class Post {
 
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 }

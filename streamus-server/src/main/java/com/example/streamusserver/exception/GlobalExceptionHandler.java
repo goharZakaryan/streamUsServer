@@ -13,7 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import java.time.LocalDateTime;
 
 
-@RestControllerAdvice
+//@RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(

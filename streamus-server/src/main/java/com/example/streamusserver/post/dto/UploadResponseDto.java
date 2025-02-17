@@ -5,10 +5,14 @@ public class UploadResponseDto {
     private String message;
     private String imgUrl;
 
+
+
+
     public UploadResponseDto(boolean error, String message, String imgUrl) {
         this.error = error;
         this.message = message;
         this.imgUrl = imgUrl;
+
     }
 
     public boolean isError() {

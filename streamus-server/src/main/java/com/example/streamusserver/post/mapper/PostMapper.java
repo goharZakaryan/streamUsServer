@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", uses = {PostImageMapper.class})
 public interface PostMapper {
 
-    @Mapping(source = "account", target = "account")
-    @Mapping(target = "images", expression = "java(mapImageUrls(postRequest.getImages(), post))")
-    Post toEntity(PostRequestDto postRequest, UserProfile account);
+//    @Mapping(source = "account", target = "account")
+//    @Mapping(target = "mediaItem", expression = "java(mapImageUrls(postRequest.getMediaItems(), post))")
+//    Post toEntity(PostRequestDto postRequest, UserProfile account);
 
     default List<PostImage> mapImageUrls(List<String> imageUrls, Post post) {
         if (imageUrls == null) {

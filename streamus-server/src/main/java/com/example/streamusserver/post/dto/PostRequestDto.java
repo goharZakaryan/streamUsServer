@@ -1,5 +1,7 @@
 package com.example.streamusserver.post.dto;
 
+import com.example.streamusserver.post.model.MediaItem;
+
 import java.util.List;
 import java.util.Map;
 
@@ -18,10 +20,9 @@ public class PostRequestDto {
     private double postLat;
     private double postLng;
     private int feeling;
-    private List< String> images;
+    private List<MediaItem> mediaItems;
     private String videoImgUrl;
     private String videoUrl;
-
 
 
     public long getAccountId() {
@@ -136,12 +137,12 @@ public class PostRequestDto {
         this.feeling = feeling;
     }
 
-    public List<String> getImages() {
-        return images;
+    public List<MediaItem> getMediaItems() {
+        return mediaItems;
     }
 
-    public void setImages(List< String> images) {
-        this.images = images;
+    public void setMediaItems(List< MediaItem> mediaItems ) {
+        this.mediaItems = mediaItems;
     }
 
     public String getVideoImgUrl() {

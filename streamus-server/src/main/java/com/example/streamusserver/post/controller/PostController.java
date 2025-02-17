@@ -1,8 +1,7 @@
 package com.example.streamusserver.post.controller;
 
-import com.example.streamusserver.post.dto.PostRequestDto;
-import com.example.streamusserver.post.dto.PostResponseDto;
-import com.example.streamusserver.post.dto.UploadResponseDto;
+import com.example.streamusserver.post.dto.*;
+import com.example.streamusserver.post.model.Post;
 import com.example.streamusserver.post.postService.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class PostController {
     private final PostService postService;
@@ -29,14 +29,43 @@ public class PostController {
         PostResponseDto response = postService.savePostToDatabase(postRequest);
         return ResponseEntity.ok(response);
     }
+    @PostMapping("/stream/get")
+    public ResponseEntity<StreamResponseDto> streamGet(@RequestBody StreamRequestDto postRequest) {
+        System.out.println("savepost");
+        StreamResponseDto response = postService.getItems(postRequest);
+        return ResponseEntity.ok(response);
+    }
+    @PostMapping("/items")
+    public ResponseEntity<StreamResponseDto> getItems(@RequestBody StreamRequestDto request) {
+        StreamResponseDto response = postService.getItems(request);
+        return ResponseEntity.ok(response);
+    }
 
+    @PostMapping("/items/{itemId}/repost")
+    public ResponseEntity<Boolean> repost(
+            @PathVariable Long itemId,
+            @RequestParam String userId) {
+        boolean success = postService.updateRepost(itemId, userId);
+        return ResponseEntity.ok(success);
+    }
+
+    @PutMapping("/items/{itemId}")
+    public ResponseEntity<Post> updateItem(
+            @PathVariable Long itemId,
+            @RequestBody Post item) {
+        if (!itemId.equals(item.getId())) {
+            return ResponseEntity.badRequest().build();
+        }
+        Post updatedItem = postService.updateItem(item);
+        return ResponseEntity.ok(updatedItem);
+    }
 
     @PostMapping("/upload/file")
     public ResponseEntity<UploadResponseDto> uploadFile(
             @RequestParam("uploaded_file") MultipartFile file,
             @RequestParam("accountId") String accountId,
             @RequestParam("accessToken") String accessToken) {
-        return ResponseEntity.ok(postService.saveUploadedFile(file, Long.parseLong(accountId), accessToken));
+        return ResponseEntity.ok(postService.uploadedFile(file, Long.parseLong(accountId), accessToken));
 
     }
 
