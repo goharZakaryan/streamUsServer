@@ -107,6 +107,19 @@ public class PostServiceImpl implements PostService {
         return new UploadResponseDto(false, "Upload successful", imageUrl);
     }
 
+    @Override
+    public UploadResponseDto uploadedVideoFile(MultipartFile videoFile, MultipartFile file, long l, String accessToken) {
+        if (!jwtUtil.isTokenValid(accessToken)) {
+            return new UploadResponseDto(true, "Invalid access token", null);
+        }
+
+        String imageUrl = serverRequest.getScheme() + "://" + serverRequest.getServerName() + "/public/" + saveFile(file, l);
+        String videoUrl = serverRequest.getScheme() + "://" + serverRequest.getServerName() + "/public/" + saveFile(videoFile, l);
+
+        return new UploadResponseDto(false, "Upload successful", imageUrl,videoUrl);
+
+    }
+
     private PostResponseDto createSuccessResponse() {
         PostResponseDto response = new PostResponseDto();
         response.setError(false);

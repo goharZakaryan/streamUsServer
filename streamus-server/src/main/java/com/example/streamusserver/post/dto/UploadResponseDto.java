@@ -4,6 +4,7 @@ public class UploadResponseDto {
     private boolean error;
     private String message;
     private String imgUrl;
+    private String videoUrl;
 
 
 
@@ -12,6 +13,13 @@ public class UploadResponseDto {
         this.error = error;
         this.message = message;
         this.imgUrl = imgUrl;
+
+    }
+    public UploadResponseDto(boolean error, String message, String imgUrl,String videoUrl) {
+        this.error = error;
+        this.message = message;
+        this.imgUrl = imgUrl;
+        this.videoUrl = videoUrl;
 
     }
 

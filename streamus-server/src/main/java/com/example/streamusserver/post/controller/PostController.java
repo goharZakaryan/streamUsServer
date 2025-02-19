@@ -68,5 +68,14 @@ public class PostController {
         return ResponseEntity.ok(postService.uploadedFile(file, Long.parseLong(accountId), accessToken));
 
     }
+    @PostMapping("/upload/video")
+    public ResponseEntity<UploadResponseDto> uploadVideo(
+            @RequestParam("uploaded_video_file") MultipartFile videoFile,
+            @RequestParam("uploaded_file") MultipartFile file,
+            @RequestParam("accountId") String accountId,
+            @RequestParam("accessToken") String accessToken) {
+        return ResponseEntity.ok(postService.uploadedVideoFile(videoFile,file, Long.parseLong(accountId), accessToken));
+
+    }
 
 }

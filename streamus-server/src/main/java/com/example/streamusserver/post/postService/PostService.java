@@ -12,4 +12,5 @@ public interface PostService {
     PostResponseDto editPost(PostRequestDto postRequest);
     UploadResponseDto uploadedFile(MultipartFile file, Long accountId, String accessToken);
 
+    UploadResponseDto uploadedVideoFile(MultipartFile videoFile, MultipartFile file, long l, String accessToken);
 }
