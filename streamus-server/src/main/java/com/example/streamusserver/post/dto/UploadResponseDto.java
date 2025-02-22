@@ -43,6 +43,14 @@ public class UploadResponseDto {
         return imgUrl;
     }
 
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
+
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }

@@ -85,7 +85,8 @@ public class PostServiceImpl implements PostService {
                 .map(imageUrl -> {
                     MediaItem mediaItem = new MediaItem();
                     mediaItem.setImageUrl(imageUrl.getImageUrl());
-                    mediaItem.setType(0);
+                    mediaItem.setVideoUrl(imageUrl.getVideoUrl() != null ? imageUrl.getVideoUrl() : "");
+                    mediaItem.setType(imageUrl.getType());
                     return mediaItem;
                 })
                 .collect(Collectors.toList());
@@ -102,7 +103,7 @@ public class PostServiceImpl implements PostService {
             return new UploadResponseDto(true, "Invalid access token", null);
         }
 
-            String imageUrl = serverRequest.getScheme() + "://" + serverRequest.getServerName() + "/public/" + saveFile(file, accountId);
+            String imageUrl =  "public/" + saveFile(file, accountId);
 
         return new UploadResponseDto(false, "Upload successful", imageUrl);
     }
@@ -113,8 +114,8 @@ public class PostServiceImpl implements PostService {
             return new UploadResponseDto(true, "Invalid access token", null);
         }
 
-        String imageUrl = serverRequest.getScheme() + "://" + serverRequest.getServerName() + "/public/" + saveFile(file, l);
-        String videoUrl = serverRequest.getScheme() + "://" + serverRequest.getServerName() + "/public/" + saveFile(videoFile, l);
+        String imageUrl =  "public/" + saveFile(file, l);
+        String videoUrl =   "public/" + saveFile(videoFile, l);
 
         return new UploadResponseDto(false, "Upload successful", imageUrl,videoUrl);
 
