@@ -1,8 +1,11 @@
 package com.example.streamusserver.post.dto;
 
+import com.example.streamusserver.post.model.Like;
 import com.example.streamusserver.post.model.Post;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class StreamResponseDto {
@@ -38,5 +41,10 @@ public class StreamResponseDto {
     }
 
     public void setViewMore(boolean b) {
+    }
+
+
+    public boolean isViewMore() {
+        return viewMore;
     }
 }

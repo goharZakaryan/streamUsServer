@@ -103,7 +103,7 @@ public class PostServiceImpl implements PostService {
             return new UploadResponseDto(true, "Invalid access token", null);
         }
 
-            String imageUrl =  "public/" + saveFile(file, accountId);
+        String imageUrl = "public/" + saveFile(file, accountId);
 
         return new UploadResponseDto(false, "Upload successful", imageUrl);
     }
@@ -114,10 +114,10 @@ public class PostServiceImpl implements PostService {
             return new UploadResponseDto(true, "Invalid access token", null);
         }
 
-        String imageUrl =  "public/" + saveFile(file, l);
-        String videoUrl =   "public/" + saveFile(videoFile, l);
+        String imageUrl = "public/" + saveFile(file, l);
+        String videoUrl = "public/" + saveFile(videoFile, l);
 
-        return new UploadResponseDto(false, "Upload successful", imageUrl,videoUrl);
+        return new UploadResponseDto(false, "Upload successful", imageUrl, videoUrl);
 
     }
 
@@ -158,6 +158,7 @@ public class PostServiceImpl implements PostService {
         }
 
     }
+
     public StreamResponseDto getItems(StreamRequestDto request) {
         StreamResponseDto response = new StreamResponseDto();
 
@@ -169,7 +170,7 @@ public class PostServiceImpl implements PostService {
         Pageable pageable = PageRequest.of(0, request.getLimit());
         List<Post> items;
 
-        if (request.getItemId() == 0 ) {
+        if (request.getItemId() == 0) {
             // Fresh load or refresh
             items = postRepository.findAllByOrderByCreatedAtDesc(pageable);
         } else {

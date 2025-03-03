@@ -15,4 +15,7 @@ public class MediaItem {
     private String selectedVideoFileName;
     private String videoUrl;
     private int type;
+
+    public MediaItem() {
+    }
 }

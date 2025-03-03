@@ -3,7 +3,7 @@ package com.example.streamusserver.dto;
 public class LoginRequestDto {
     private String username;
     private String password;
-    private String CLIENT_ID;
+    private String clientId;
     private String hash;
     private String appType;
     private String fcm_regId;
@@ -24,12 +24,12 @@ public class LoginRequestDto {
         this.password = password;
     }
 
-    public String getCLIENT_ID() {
-        return CLIENT_ID;
+    public String getClientId() {
+        return clientId;
     }
 
-    public void setCLIENT_ID(String CLIENT_ID) {
-        this.CLIENT_ID = CLIENT_ID;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     public String getHash() {

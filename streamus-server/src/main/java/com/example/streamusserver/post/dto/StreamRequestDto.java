@@ -12,7 +12,8 @@ public class StreamRequestDto {
 
     private String language;
     private int limit;
-
+    public StreamRequestDto() {
+    }
     public StreamRequestDto(long accountId, String accessToken, int itemId, String language) {
         this.accountId = accountId;
         this.accessToken = accessToken;

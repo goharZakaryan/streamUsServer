@@ -1,11 +1,13 @@
 package com.example.streamusserver.post.model;
 
 import com.example.streamusserver.model.UserProfile;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 
@@ -16,6 +18,9 @@ public class Post {
     @ManyToOne
     private UserProfile account;
     private String accessToken;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Like> likes = new HashSet<>();
     private long groupId;
     private long postId;
     private long rePostId;
@@ -188,6 +193,14 @@ public class Post {
 
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
+    }
+
+    public Set<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<Like> likes) {
+        this.likes = likes;
     }
 
     public LocalDate getCreatedAt() {
