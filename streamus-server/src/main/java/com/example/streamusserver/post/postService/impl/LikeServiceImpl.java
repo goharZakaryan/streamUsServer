@@ -44,8 +44,15 @@ public class LikeServiceImpl implements LikeService {
             like.setCreatedAt(LocalDateTime.now());
 
             likeRepository.save(like);
-            return new LikeResponse(true,++likeCount); // Post liked
+            return new LikeResponse(true, ++likeCount); // Post liked
         }
+    }
+
+    public LikeResponse getLike(Long userId, Long postId) {
+        boolean alreadyLiked = likeRepository.existsByUserIdAndPostId(userId, postId);
+
+        return new LikeResponse(alreadyLiked, getLikeCount(postId)); // Post liked
+
     }
 
     public boolean checkIfUserLikedPost(Long userId, Long postId) {

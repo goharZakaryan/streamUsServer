@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/v1/likes")
 public class LikeController {
@@ -24,16 +21,10 @@ public class LikeController {
     }
 
     @GetMapping("/status")
-    public ResponseEntity<Map<String, Object>> getLikeStatus(
+    public ResponseEntity<LikeResponse> getLikeStatus(
             @RequestParam Long userId,
             @RequestParam Long postId) {
-        boolean isLiked = likeService.checkIfUserLikedPost(userId, postId);
-        int likeCount = likeService.getLikeCount(postId);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("liked", isLiked);
-        response.put("likeCount", likeCount);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(likeService.getLike(userId, postId));
     }
 }
