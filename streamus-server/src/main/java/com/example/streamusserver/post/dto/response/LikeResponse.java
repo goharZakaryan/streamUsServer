@@ -1,4 +1,4 @@
-package com.example.streamusserver.post.dto;
+package com.example.streamusserver.post.dto.response;
 
 public class LikeResponse {
     private boolean liked;

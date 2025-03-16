@@ -1,11 +1,8 @@
-package com.example.streamusserver.post.dto;
+package com.example.streamusserver.post.dto.response;
 
-import com.example.streamusserver.post.model.Like;
 import com.example.streamusserver.post.model.Post;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 public class StreamResponseDto {

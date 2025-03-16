@@ -1,9 +1,8 @@
-package com.example.streamusserver.post.dto;
+package com.example.streamusserver.post.dto.request;
 
 import com.example.streamusserver.post.model.MediaItem;
 
 import java.util.List;
-import java.util.Map;
 
 public class PostRequestDto {
     private long accountId;

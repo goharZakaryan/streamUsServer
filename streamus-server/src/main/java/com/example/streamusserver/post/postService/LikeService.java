@@ -1,6 +1,6 @@
 package com.example.streamusserver.post.postService;
 
-import com.example.streamusserver.post.dto.LikeResponse;
+import com.example.streamusserver.post.dto.response.LikeResponse;
 
 public interface LikeService {
     LikeResponse toggleLike(Long userId, Long postId);

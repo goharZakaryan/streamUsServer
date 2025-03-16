@@ -1,6 +1,6 @@
 package com.example.streamusserver.post.controller;
 
-import com.example.streamusserver.post.dto.LikeResponse;
+import com.example.streamusserver.post.dto.response.LikeResponse;
 import com.example.streamusserver.post.postService.LikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

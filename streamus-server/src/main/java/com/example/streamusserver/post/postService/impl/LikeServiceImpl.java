@@ -1,7 +1,7 @@
 package com.example.streamusserver.post.postService.impl;
 
 import com.example.streamusserver.model.UserProfile;
-import com.example.streamusserver.post.dto.LikeResponse;
+import com.example.streamusserver.post.dto.response.LikeResponse;
 import com.example.streamusserver.post.model.Like;
 import com.example.streamusserver.post.model.Post;
 import com.example.streamusserver.post.postService.LikeService;

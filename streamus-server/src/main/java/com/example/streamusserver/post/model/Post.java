@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +39,19 @@ public class Post {
     private String videoImgUrl;
     private String videoUrl;
     private LocalDate createdAt;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Comment> comments = new ArrayList<>();
+    private int commentsCount;
+
+    // Add getter and setter for comments
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public int getRePostsCount() {
         return rePostsCount;
@@ -48,7 +62,6 @@ public class Post {
     }
 
     private int rePostsCount;
-
 
 
     public Long getId() {
@@ -209,5 +222,13 @@ public class Post {
 
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public int getCommentsCount() {
+        return commentsCount;
+    }
+
+    public void setCommentsCount(int commentsCount) {
+        this.commentsCount = commentsCount;
     }
 }

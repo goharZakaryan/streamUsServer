@@ -2,7 +2,11 @@ package com.example.streamusserver.post.postService.impl;
 
 import com.example.streamusserver.exception.UserNotFoundException;
 import com.example.streamusserver.model.UserProfile;
-import com.example.streamusserver.post.dto.*;
+import com.example.streamusserver.post.dto.request.PostRequestDto;
+import com.example.streamusserver.post.dto.request.StreamRequestDto;
+import com.example.streamusserver.post.dto.response.PostResponseDto;
+import com.example.streamusserver.post.dto.response.StreamResponseDto;
+import com.example.streamusserver.post.dto.response.UploadResponseDto;
 import com.example.streamusserver.post.mapper.PostImageMapper;
 import com.example.streamusserver.post.mapper.PostMapper;
 import com.example.streamusserver.post.model.MediaItem;
