@@ -55,7 +55,8 @@ public class CommentServiceImpl implements CommentService {
 //                    .orElseThrow(() -> new CommentNotFoundException(commentDTO.getParentCommentId()));
 //            comment.setParentComment(parentComment);
 //        }
-        post.setCommentsCount(getCommentCount(post.getPostId()));
+        int commentsCount=post.getComments().size();
+        post.setCommentsCount(++commentsCount);
         postRepository.save(post);
         Comment savedComment = commentRepository.save(comment);
         return mapToDTO(savedComment);
