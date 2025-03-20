@@ -32,6 +32,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,6 +81,7 @@ public class PostServiceImpl implements PostService {
         }
 
         Post post = new Post();
+
         post.setAccount(authenticatedUser);
         post.setPostText(postRequest.getPostText());
         post.setVideoUrl(postRequest.getVideoUrl());
@@ -96,6 +99,7 @@ public class PostServiceImpl implements PostService {
                 .collect(Collectors.toList());
         mediaItemRepository.saveAll(postImages);
         post.setMediaItem(postImages);
+        post.setCreatedAt(LocalDate.now());
         postRepository.save(post);
         return response;
     }
@@ -184,10 +188,17 @@ public class PostServiceImpl implements PostService {
                     pageable
             );
         }
+        List<Post> postList = items.stream()
+                .peek(post -> {
+                    post.setFromUserUsername(post.getAccount().getFullname());
+                    post.setFromUserPhotoUrl(post.getAccount().getPhoto_url());
+                    post.setFromUserId(post.getAccount().getId());
+                })
+                .collect(Collectors.toList());
 
         // Set response
         response.setError(false);
-        response.setItems(items);
+        response.setItems(postList);
         response.setViewMore(items.size() >= request.getLimit());
 
         // Set last item ID for next pagination

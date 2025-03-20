@@ -18,10 +18,12 @@ public class Post {
     public Long id;
     @ManyToOne
     private UserProfile account;
+    private Long fromUserId;
     private String accessToken;
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Like> likes = new HashSet<>();
+    private String fromUserUsername;
     private long groupId;
     private long postId;
     private long rePostId;
@@ -34,6 +36,7 @@ public class Post {
     private double postLat;
     private double postLng;
     private int feeling;
+    private String fromUserPhotoUrl;
     @OneToMany()
     private List<MediaItem> mediaItem;
     private String videoImgUrl;
@@ -230,5 +233,29 @@ public class Post {
 
     public void setCommentsCount(int commentsCount) {
         this.commentsCount = commentsCount;
+    }
+
+    public String getFromUserUsername() {
+        return fromUserUsername;
+    }
+
+    public void setFromUserUsername(String fromUserUsername) {
+        this.fromUserUsername = fromUserUsername;
+    }
+
+    public String getFromUserPhotoUrl() {
+        return fromUserPhotoUrl;
+    }
+
+    public void setFromUserPhotoUrl(String fromUserPhotoUrl) {
+        this.fromUserPhotoUrl = fromUserPhotoUrl;
+    }
+
+    public Long getFromUserId() {
+        return fromUserId;
+    }
+
+    public void setFromUserId(Long fromUserId) {
+        this.fromUserId = fromUserId;
     }
 }
