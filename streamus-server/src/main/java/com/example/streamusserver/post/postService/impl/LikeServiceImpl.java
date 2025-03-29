@@ -1,6 +1,7 @@
 package com.example.streamusserver.post.postService.impl;
 
 import com.example.streamusserver.model.UserProfile;
+import com.example.streamusserver.notification.service.NotificationService;
 import com.example.streamusserver.post.dto.response.LikeResponse;
 import com.example.streamusserver.post.model.Like;
 import com.example.streamusserver.post.model.Post;
@@ -24,6 +25,8 @@ public class LikeServiceImpl implements LikeService {
 
     @Autowired
     private UserProfileService userProfileService;
+    @Autowired
+    private NotificationService notificationService;
 
     @Transactional
     public LikeResponse toggleLike(Long userId, Long postId) {
@@ -44,6 +47,7 @@ public class LikeServiceImpl implements LikeService {
             like.setCreatedAt(LocalDateTime.now());
 
             likeRepository.save(like);
+            notificationService.createLikeNotification(userId,postId,user,post);
             return new LikeResponse(true, ++likeCount); // Post liked
         }
     }

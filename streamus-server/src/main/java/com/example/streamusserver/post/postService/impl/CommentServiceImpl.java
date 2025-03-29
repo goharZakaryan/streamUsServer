@@ -4,6 +4,7 @@ import com.example.streamusserver.exception.CommentNotFoundException;
 import com.example.streamusserver.exception.PostNotFoundException;
 import com.example.streamusserver.exception.UserNotFoundException;
 import com.example.streamusserver.model.UserProfile;
+import com.example.streamusserver.notification.service.NotificationService;
 import com.example.streamusserver.post.dto.request.CommentRequestDto;
 import com.example.streamusserver.post.dto.response.CommentResponseDto;
 import com.example.streamusserver.post.model.Comment;
@@ -36,7 +37,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private UserProfileService userProfileService;
-
+    @Autowired
+    private NotificationService notificationService;
     @Transactional
     public CommentResponseDto createComment(CommentRequestDto commentDTO) {
         Post post = postRepository.findById(commentDTO.getPostId())
@@ -59,6 +61,7 @@ public class CommentServiceImpl implements CommentService {
         post.setCommentsCount(++commentsCount);
         postRepository.save(post);
         Comment savedComment = commentRepository.save(comment);
+        notificationService.createCommentNotification(user,post,commentDTO.getCommentText());
         return mapToDTO(savedComment);
     }
 
@@ -110,16 +113,6 @@ public class CommentServiceImpl implements CommentService {
 //        commentRepository.delete(comment);
 //    }
 
-    @Transactional
-    public CommentResponseDto likeComment(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException(commentId));
-
-        comment.setLikesCount(comment.getLikesCount() + 1);
-
-        Comment updatedComment = commentRepository.save(comment);
-        return mapToDTO(updatedComment);
-    }
 
     @Transactional(readOnly = true)
     public int getCommentCount(Long postId) {

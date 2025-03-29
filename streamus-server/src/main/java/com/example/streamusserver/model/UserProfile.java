@@ -19,6 +19,7 @@ public class UserProfile {
     private int year;
     private int month;
     private int day;
+    private int state;
     private String location;
     private String bio;
     private String username;
@@ -236,5 +237,13 @@ public class UserProfile {
 
     public void setFriends(Set<UserProfile> friends) {
         this.friends = friends;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

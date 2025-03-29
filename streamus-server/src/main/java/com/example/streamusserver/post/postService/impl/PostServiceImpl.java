@@ -35,6 +35,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -114,6 +115,11 @@ public class PostServiceImpl implements PostService {
         String imageUrl = "public/" + saveFile(file, accountId);
 
         return new UploadResponseDto(false, "Upload successful", imageUrl);
+    }
+
+    @Override
+    public Optional<Post> findById(Long id) {
+        return postRepository.findById(id);
     }
 
     @Override
