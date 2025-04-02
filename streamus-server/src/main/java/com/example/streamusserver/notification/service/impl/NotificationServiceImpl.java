@@ -9,10 +9,8 @@ import com.example.streamusserver.notification.model.enums.NotificationType;
 import com.example.streamusserver.notification.repository.NotificationRepository;
 import com.example.streamusserver.notification.service.NotificationService;
 import com.example.streamusserver.post.model.Post;
-import com.example.streamusserver.post.postService.PostService;
 import com.example.streamusserver.security.JwtUtil;
 import com.example.streamusserver.service.UserProfileService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -32,8 +30,6 @@ public class NotificationServiceImpl implements NotificationService {
     @Autowired
     private UserProfileService userProfileService;
 
-    @Autowired
-    private PostService postService;
 
     public Notification createFollowRequest(Long senderId, Long targetUserId) {
         Notification notification = new Notification();
@@ -80,8 +76,20 @@ public class NotificationServiceImpl implements NotificationService {
         if (!jwtUtil.isTokenValid(userId.getAuthToken())) {
             return new NotificationResponseDto(true);
         }
-        List<Notify> byRecipientIdAndIsReadFalse = mapNotificationToNotify(notificationRepository.findByRecipientIdAndIsReadFalse(userId.getTargetUserId()));
+        List<Notification> notifications = notificationRepository.findByRecipientIdAndIsReadFalse(userId.getTargetUserId());
+        List<Notify> byRecipientIdAndIsReadFalse = mapNotificationToNotify(notifications);
+        notificationRepository.saveAll(
+                notifications.stream()
+                        .peek(notification -> notification.setRead(true))
+                        .toList()
+        );
+
         return new NotificationResponseDto(byRecipientIdAndIsReadFalse);
+    }
+
+    @Override
+    public boolean notificationExists(Long id) {
+        return notificationRepository.existsByRecipientIdAndIsReadFalse(id);
     }
 
     public void markNotificationsAsRead(NotificationRequestDto notificationRequestDto) {
@@ -109,7 +117,8 @@ public class NotificationServiceImpl implements NotificationService {
                     notify.setFromUserUsername(notification.getUserProfile().getUsername());
                     notify.setFromUserState(notification.getUserProfile().getState());
                     notify.setItemId(notification.getPost().getId());
-                    notify.setType(0);
+
+                    notify.setType(notification.getType().name());
                     return notify;
                 })
                 .collect(Collectors.toList());

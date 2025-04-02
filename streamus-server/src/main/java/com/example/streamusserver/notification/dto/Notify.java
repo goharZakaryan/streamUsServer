@@ -4,8 +4,8 @@ package com.example.streamusserver.notification.dto;
 public class Notify {
 
     private long id, itemId, fromUserId;
-    private int fromUserState,  type, subType = 0;
-    private String fromUserUsername, fromUserFullname, fromUserPhotoUrl, timeAgo,createAt;
+    private int fromUserState, subType = 0;
+    private String fromUserUsername,type, fromUserFullname, fromUserPhotoUrl, timeAgo,createAt;
 
     public Notify() {
 
@@ -22,12 +22,12 @@ public class Notify {
         return this.id;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
 
         this.type = type;
     }
 
-    public int getType() {
+    public String getType() {
 
         return this.type;
     }

@@ -2,6 +2,7 @@ package com.example.streamusserver.post.postService.impl;
 
 import com.example.streamusserver.exception.UserNotFoundException;
 import com.example.streamusserver.model.UserProfile;
+import com.example.streamusserver.notification.service.NotificationService;
 import com.example.streamusserver.post.dto.request.PostRequestDto;
 import com.example.streamusserver.post.dto.request.StreamRequestDto;
 import com.example.streamusserver.post.dto.response.PostResponseDto;
@@ -19,6 +20,7 @@ import com.example.streamusserver.service.UserProfileService;
 import jakarta.servlet.ServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,9 +49,9 @@ public class PostServiceImpl implements PostService {
     private final UserProfileService userProfileService;
     private final PostRepository postRepository;
     private final MediaItemRepository mediaItemRepository;
-    private final PostMapper postMapper;
-    private final PostImageMapper postImageMapper;
-    private final ServletRequest serverRequest;
+    @Autowired
+    private  NotificationService notificationService;
+
 
     @Transactional
     @Override
@@ -205,6 +207,7 @@ public class PostServiceImpl implements PostService {
         // Set response
         response.setError(false);
         response.setItems(postList);
+        response.setNotification(notificationService.notificationExists(request.getAccountId()));
         response.setViewMore(items.size() >= request.getLimit());
 
         // Set last item ID for next pagination

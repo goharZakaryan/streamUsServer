@@ -7,6 +7,10 @@ public class NotificationRequestDto {
     private String authToken;
     private List<Long> notificationIds;
 
+    public NotificationRequestDto(Long targetUserId) {
+        this.targetUserId = targetUserId;
+    }
+
     public Long getTargetUserId() {
         return targetUserId;
     }

@@ -6,6 +6,7 @@ public class StreamRequestDto {
 
     private long accountId;
 
+
     private String accessToken;
 
     private int itemId;

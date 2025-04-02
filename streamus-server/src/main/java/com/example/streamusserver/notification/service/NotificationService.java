@@ -11,6 +11,8 @@ public interface NotificationService {
 
     NotificationResponseDto getUnreadNotifications(NotificationRequestDto notificationRequestDto);
 
+    boolean notificationExists(Long id);
+
     void markNotificationsAsRead(NotificationRequestDto notificationRequestDto);
 
     Notification createCommentNotification(UserProfile commenterId, Post postId, String commentText);

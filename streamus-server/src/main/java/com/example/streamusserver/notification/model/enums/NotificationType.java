@@ -2,7 +2,19 @@ package com.example.streamusserver.notification.model.enums;
 
 public enum NotificationType {
     FOLLOW_REQUEST,
-    NEW_FOLLOWER,
+    FOLLOWER,
     LIKE,
-    COMMENT
+    COMMENT,
+    FRIEND_REQUEST_ACCEPTED,TYPE_GIFT,
+    IMAGE_COMMENT,
+    IMAGE_COMMENT_REPLY,
+    IMAGE_LIKE,
+    VIDEO_COMMENT,
+    VIDEO_COMMENT_REPLY,
+    VIDEO_LIKE,
+    PROFILE_PHOTO_APPROVE,
+    PROFILE_PHOTO_REJECT,
+    PROFILE_COVER_APPROVE,
+    PROFILE_COVER_REJECT,
+    COMMENT_REPLY
 }

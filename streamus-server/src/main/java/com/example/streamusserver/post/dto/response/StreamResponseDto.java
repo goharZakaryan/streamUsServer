@@ -9,6 +9,8 @@ public class StreamResponseDto {
     private boolean error;
 
     private int itemId;
+    private boolean notification;
+
 
     private List<Post> items;
     private boolean viewMore;
@@ -40,6 +42,13 @@ public class StreamResponseDto {
     public void setViewMore(boolean b) {
     }
 
+    public boolean isNotification() {
+        return notification;
+    }
+
+    public void setNotification(boolean notification) {
+        this.notification = notification;
+    }
 
     public boolean isViewMore() {
         return viewMore;
