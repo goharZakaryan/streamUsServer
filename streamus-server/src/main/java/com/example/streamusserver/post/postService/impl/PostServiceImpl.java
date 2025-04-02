@@ -201,6 +201,7 @@ public class PostServiceImpl implements PostService {
                     post.setFromUserUsername(post.getAccount().getFullname());
                     post.setFromUserPhotoUrl(post.getAccount().getPhoto_url());
                     post.setFromUserId(post.getAccount().getId());
+                    post.setPostText(post.getPostText());
                 })
                 .collect(Collectors.toList());
 
