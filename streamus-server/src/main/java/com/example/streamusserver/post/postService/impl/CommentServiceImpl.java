@@ -61,7 +61,10 @@ public class CommentServiceImpl implements CommentService {
         post.setCommentsCount(++commentsCount);
         postRepository.save(post);
         Comment savedComment = commentRepository.save(comment);
-        notificationService.createCommentNotification(user,post,commentDTO.getCommentText());
+        if (!user.equals(post.getAccount().getId())){
+            notificationService.createCommentNotification(user,post,commentDTO.getCommentText());
+
+        }
         return mapToDTO(savedComment);
     }
 

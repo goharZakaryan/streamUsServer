@@ -188,7 +188,7 @@ public class PostServiceImpl implements PostService {
 
         if (request.getItemId() == 0) {
             // Fresh load or refresh
-            items = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+            items = postRepository.findAllByOrderByCreatedAtDesc(request.getAccountId(), pageable);
         } else {
             // Load more (pagination)
             items = postRepository.findByIdLessThanOrderByCreatedAtDesc(
