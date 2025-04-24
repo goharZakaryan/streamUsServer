@@ -12,7 +12,7 @@ public class StreamResponseDto {
     private boolean notification;
 
 
-    private List<Post> items;
+    private List<PostResponse> items;
     private boolean viewMore;
 
     public boolean isError() {
@@ -23,7 +23,7 @@ public class StreamResponseDto {
         return itemId;
     }
 
-    public List<Post> getItems() {
+    public List<PostResponse> getItems() {
         return items;
     }
 
@@ -35,7 +35,7 @@ public class StreamResponseDto {
         this.itemId = itemId;
     }
 
-    public void setItems(List<Post> items) {
+    public void setItems(List<PostResponse> items) {
         this.items = items;
     }
 

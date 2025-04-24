@@ -19,7 +19,7 @@ public class Post {
     @ManyToOne
     private UserProfile account;
     private Long fromUserId;
-    private String accessToken;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Like> likes = new HashSet<>();
@@ -82,16 +82,7 @@ public class Post {
     public void setAccount(UserProfile account) {
         this.account = account;
     }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public long getGroupId() {
+ public long getGroupId() {
         return groupId;
     }
 

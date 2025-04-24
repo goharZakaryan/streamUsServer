@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -18,10 +20,11 @@ public class UserProfileController {
 //    public ResponseEntity<ProfileSettingsResponseDto> saveProfileSettings() {
 //        System.out.println("jjjj");
 //        ProfileSettingsResponseDto response = new ProfileSettingsResponseDto();
-////        ProfileSettingsResponseDto response = profileSettingsService.updateProfileSettings(request);
-////        if (response.isError()) {
-////            return ResponseEntity.badRequest().body(response);
-////        }
+
+    /// /        ProfileSettingsResponseDto response = profileSettingsService.updateProfileSettings(request);
+    /// /        if (response.isError()) {
+    /// /            return ResponseEntity.badRequest().body(response);
+    /// /        }
 //
 //        return ResponseEntity.ok(response);
 //    }
@@ -66,6 +69,17 @@ public class UserProfileController {
         try {
             Integer result = userProfileService.confirmEmail(confirmEmail);
             return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Return a meaningful error code (e.g., HTTP 500)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/user/media")
+    public ResponseEntity<List<MediaItemDTO>> loadMedia(@RequestParam("id") Long id, @RequestParam("mediaType") String mediaType) {
+        try {
+            return ResponseEntity.ok(userProfileService.getUserMedia(id,1,30,mediaType));
         } catch (Exception e) {
             e.printStackTrace();
             // Return a meaningful error code (e.g., HTTP 500)

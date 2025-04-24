@@ -1,0 +1,15 @@
+package com.example.streamusserver.post.dto.response;
+
+import lombok.Data;
+
+import java.util.List;
+
+@Data
+public class PostResponse {
+    private String fromUserUsername;
+    private String fromUserPhotoUrl;
+    private Long fromUserId;
+    private String postText;
+   private List<MediaItemResponseDto> mediaItemResponseDtoList;
+
+}

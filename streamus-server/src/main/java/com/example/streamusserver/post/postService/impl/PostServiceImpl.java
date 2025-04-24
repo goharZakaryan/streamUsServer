@@ -8,8 +8,7 @@ import com.example.streamusserver.post.dto.request.StreamRequestDto;
 import com.example.streamusserver.post.dto.response.PostResponseDto;
 import com.example.streamusserver.post.dto.response.StreamResponseDto;
 import com.example.streamusserver.post.dto.response.UploadResponseDto;
-import com.example.streamusserver.post.mapper.PostImageMapper;
-import com.example.streamusserver.post.mapper.PostMapper;
+import com.example.streamusserver.post.mapper.PostMap;
 import com.example.streamusserver.post.model.MediaItem;
 import com.example.streamusserver.post.model.Post;
 import com.example.streamusserver.post.postService.PostService;
@@ -17,8 +16,6 @@ import com.example.streamusserver.post.repository.MediaItemRepository;
 import com.example.streamusserver.post.repository.PostRepository;
 import com.example.streamusserver.security.JwtUtil;
 import com.example.streamusserver.service.UserProfileService;
-import jakarta.servlet.ServletRequest;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,7 +33,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,8 +47,8 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final MediaItemRepository mediaItemRepository;
     @Autowired
-    private  NotificationService notificationService;
-
+    private NotificationService notificationService;
+    private final PostMap postMapper;
 
     @Transactional
     @Override
@@ -73,6 +70,7 @@ public class PostServiceImpl implements PostService {
         return createSuccessResponse();
     }
 
+    @Transactional
     public PostResponseDto savePostToDatabase(PostRequestDto postRequest) {
         PostResponseDto response = new PostResponseDto();
         UserProfile authenticatedUser = userProfileService.findById(postRequest.getAccountId())
@@ -97,6 +95,7 @@ public class PostServiceImpl implements PostService {
                     mediaItem.setImageUrl(imageUrl.getImageUrl());
                     mediaItem.setVideoUrl(imageUrl.getVideoUrl() != null ? imageUrl.getVideoUrl() : "");
                     mediaItem.setType(imageUrl.getType());
+                    mediaItem.setPost(post);
                     return mediaItem;
                 })
                 .collect(Collectors.toList());
@@ -196,18 +195,11 @@ public class PostServiceImpl implements PostService {
                     pageable
             );
         }
-        List<Post> postList = items.stream()
-                .peek(post -> {
-                    post.setFromUserUsername(post.getAccount().getFullname());
-                    post.setFromUserPhotoUrl(post.getAccount().getPhoto_url());
-                    post.setFromUserId(post.getAccount().getId());
-                    post.setPostText(post.getPostText());
-                })
-                .collect(Collectors.toList());
+
 
         // Set response
         response.setError(false);
-        response.setItems(postList);
+        response.setItems(postMapper.converttoDto(items));
         response.setNotification(notificationService.notificationExists(request.getAccountId()));
         response.setViewMore(items.size() >= request.getLimit());
 

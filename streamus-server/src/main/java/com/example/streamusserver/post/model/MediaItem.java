@@ -14,7 +14,10 @@ public class MediaItem {
     private String imageUrl;
     private String selectedVideoFileName;
     private String videoUrl;
-    private int type;
+    @Enumerated(EnumType.STRING)
+    private ImageType type;
+    @ManyToOne
+    private Post post;
 
     public MediaItem() {
     }

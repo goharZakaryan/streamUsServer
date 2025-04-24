@@ -4,11 +4,14 @@ import com.example.streamusserver.config.EmailConfig;
 import com.example.streamusserver.dto.*;
 import com.example.streamusserver.mapper.UserProfileMapper;
 import com.example.streamusserver.model.UserProfile;
+import com.example.streamusserver.post.mapper.MediaItemMapper;
+import com.example.streamusserver.post.model.MediaItem;
+import com.example.streamusserver.post.model.enums.ImageType;
+import com.example.streamusserver.post.repository.MediaItemRepository;
 import com.example.streamusserver.repository.UserProfileRepository;
 import com.example.streamusserver.security.JwtUtil;
 import com.example.streamusserver.service.FollowRequestService;
 import com.example.streamusserver.service.UserProfileService;
-import jakarta.servlet.ServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,28 +23,27 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
 public class UserProfileServiceImpl implements UserProfileService {
     private final EmailConfig emailConfig;
+    private final MediaItemMapper mediaItemMapper;
+
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final UserProfileRepository userProfileRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserProfileMapper userProfileMapper;
+    private final MediaItemRepository mediaItemRepository;
     @Autowired
     @Lazy
-    private  FollowRequestService followRequestService;
+    private FollowRequestService followRequestService;
 
     @Value("${file.path}")
     private String sourceDir;
@@ -238,6 +240,21 @@ public class UserProfileServiceImpl implements UserProfileService {
         dto.setAccount(accountDetailsList);
 
         return dto;
+    }
+
+    public List<MediaItemDTO> getUserMedia(Long userId, int page, int size, String mediaType) {
+        List<MediaItem> mediaItems=new ArrayList<>();
+        if (mediaType.equalsIgnoreCase(ImageType.PHOTO.name())) {
+            mediaItems = mediaItemRepository.findByPostAccountIdAndType(userId, ImageType.PHOTO);
+
+        }else {
+
+        }
+        // Filter by media type (e.g., 1 for images, 2 for videos)
+
+        return mediaItems.stream()
+                .map(mediaItemMapper::convertToMediaItemDTO)
+                .collect(Collectors.toList());
     }
 
     /**

@@ -3,6 +3,7 @@ package com.example.streamusserver.service;
 import com.example.streamusserver.dto.*;
 import com.example.streamusserver.model.UserProfile;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserProfileService {
@@ -10,7 +11,7 @@ public interface UserProfileService {
     UserProfile editProfile(UserProfile userProfile);
 
     ProfileResponseDto save(ProfileRequestDto userProfile);
-
+    List<MediaItemDTO> getUserMedia(Long userId, int page, int size, String mediaType);
     SearchResponse searchProfiles(SearchRequest searchRequest);
     SearchResponse searchProfilesPreload(SearchRequest searchRequest);
 
