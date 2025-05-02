@@ -10,6 +10,7 @@ public class PostResponse {
     private String fromUserPhotoUrl;
     private Long fromUserId;
     private String postText;
-   private List<MediaItemResponseDto> mediaItemResponseDtoList;
+
+   private List<MediaItemResponseDto> mediaItem;
 
 }

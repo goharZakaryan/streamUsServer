@@ -37,7 +37,7 @@ public class PostMap {
             postResponse.setFromUserPhotoUrl(post.getAccount().getPhoto_url());
             postResponse.setFromUserId(post.getAccount().getId());
             postResponse.setPostText(post.getPostText());
-            postResponse.setMediaItemResponseDtoList(mediaItemMapper.convertToMediaItemDTO(post.getMediaItem()));
+            postResponse.setMediaItem(mediaItemMapper.convertToMediaItemDTO(post.getMediaItem()));
             postResponses.add(postResponse);
         }
         return postResponses;
