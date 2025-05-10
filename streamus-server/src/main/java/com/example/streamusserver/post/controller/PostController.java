@@ -1,5 +1,6 @@
 package com.example.streamusserver.post.controller;
 
+import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.request.PostRequestDto;
 import com.example.streamusserver.post.dto.request.StreamRequestDto;
 import com.example.streamusserver.post.dto.response.PostResponseDto;
@@ -19,6 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/v1")
 public class PostController {
     private final PostService postService;
+
+    @PostMapping("/post/delete")
+    public ResponseEntity<Void> hidePost(@RequestBody HideItemRequestDto hideItemRequestDto) {
+        postService.deletePost(hideItemRequestDto);
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/edit")
     public ResponseEntity<PostResponseDto> editPost(@RequestBody PostRequestDto postRequest) {

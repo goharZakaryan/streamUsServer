@@ -1,8 +1,10 @@
 package com.example.streamusserver.post.postService.impl;
 
+import com.example.streamusserver.exception.PostNotFoundException;
 import com.example.streamusserver.exception.UserNotFoundException;
 import com.example.streamusserver.model.UserProfile;
 import com.example.streamusserver.notification.service.NotificationService;
+import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.request.PostRequestDto;
 import com.example.streamusserver.post.dto.request.StreamRequestDto;
 import com.example.streamusserver.post.dto.response.PostResponseDto;
@@ -11,6 +13,7 @@ import com.example.streamusserver.post.dto.response.UploadResponseDto;
 import com.example.streamusserver.post.mapper.PostMap;
 import com.example.streamusserver.post.model.MediaItem;
 import com.example.streamusserver.post.model.Post;
+import com.example.streamusserver.post.model.enums.ImageType;
 import com.example.streamusserver.post.postService.PostService;
 import com.example.streamusserver.post.repository.MediaItemRepository;
 import com.example.streamusserver.post.repository.PostRepository;
@@ -68,6 +71,37 @@ public class PostServiceImpl implements PostService {
 //        postRepository.save(post);
 
         return createSuccessResponse();
+    }
+
+    @Transactional
+    public void deletePost(HideItemRequestDto itemRequestDto) {
+        if (!jwtUtil.isTokenValid(itemRequestDto.getAccessToken())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to get post Items ");
+        }
+        UserProfile user = userProfileService.findById(itemRequestDto.getUserId())
+                .orElseThrow(() -> new UserNotFoundException(itemRequestDto.getUserId().toString()));
+        Post post = findById(itemRequestDto.getPostId())
+                .orElseThrow(() -> new PostNotFoundException(itemRequestDto.getPostId()));
+
+        if (itemRequestDto.getType().equalsIgnoreCase(ImageType.PHOTO.name())){
+            MediaItem mediaItem = mediaItemRepository.findByImageUrl(itemRequestDto.getItemUrl());
+
+            List<MediaItem> mediaList = post.getMediaItem();
+
+            boolean removed = mediaList.remove(mediaItem);
+            if (removed) {
+                post.setMediaItem(mediaList);
+                if (!mediaList.isEmpty()){
+                    postRepository.save(post); // Update the post
+
+                }else {
+                    postRepository.delete(post);
+                }
+                mediaItemRepository.delete(mediaItem); // Delete from DB
+            }
+        }else {
+            mediaItemRepository.deleteByVideoUrl(itemRequestDto.getItemUrl());
+        }
     }
 
     @Transactional

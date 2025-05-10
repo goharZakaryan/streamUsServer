@@ -1,5 +1,6 @@
 package com.example.streamusserver.post.postService;
 
+import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.request.PostRequestDto;
 import com.example.streamusserver.post.dto.request.StreamRequestDto;
 import com.example.streamusserver.post.dto.response.PostResponseDto;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 public interface PostService {
     Post updateItem(Post item);
-
+    void deletePost(HideItemRequestDto itemRequestDto);
     boolean updateRepost(Long itemId, String userId);
 
     StreamResponseDto getItems(StreamRequestDto request);
