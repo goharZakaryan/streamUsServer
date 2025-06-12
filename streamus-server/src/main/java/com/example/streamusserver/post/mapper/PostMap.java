@@ -33,6 +33,7 @@ public class PostMap {
         List<PostResponse> postResponses = new ArrayList<>();
         for (Post post : posts) {
             PostResponse postResponse = new PostResponse();
+            postResponse.setId(post.getId());
             postResponse.setFromUserUsername(post.getAccount().getFullname());
             postResponse.setFromUserPhotoUrl(post.getAccount().getPhoto_url());
             postResponse.setFromUserId(post.getAccount().getId());
