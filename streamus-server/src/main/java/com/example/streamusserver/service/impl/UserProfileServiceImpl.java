@@ -158,6 +158,7 @@ public class UserProfileServiceImpl implements UserProfileService {
      */
     @Override
     public ProfileDto getProfile(Long id) {
+        System.out.println(id);
         return userProfileRepository.findById(id)
                 .map(userProfile -> {
                     userProfile.setFollowingsCount(followRequestService.countByFollowing(userProfile));
@@ -232,22 +233,22 @@ public class UserProfileServiceImpl implements UserProfileService {
         accountDetails.setUsername(userProfile.getUsername());
         accountDetails.setFullname(userProfile.getFullname());
         accountDetails.setEmail(userProfile.getEmail());
-
+        accountDetails.setAccountId(userProfile.getId());
         accountDetailsList.add(accountDetails);
 
         ProfileResponseDto dto = new ProfileResponseDto();
         dto.setAccessToken(accessToken);
         dto.setAccount(accountDetailsList);
-
+        dto.setAccountId(userProfile.getId());
         return dto;
     }
 
     public List<MediaItemDTO> getUserMedia(Long userId, int page, int size, String mediaType) {
-        List<MediaItem> mediaItems=new ArrayList<>();
+        List<MediaItem> mediaItems = new ArrayList<>();
         if (mediaType.equalsIgnoreCase(ImageType.PHOTO.name())) {
             mediaItems = mediaItemRepository.findByPostAccountIdAndType(userId, ImageType.PHOTO);
 
-        }else {
+        } else {
 
         }
         // Filter by media type (e.g., 1 for images, 2 for videos)

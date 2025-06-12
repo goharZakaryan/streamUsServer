@@ -72,13 +72,21 @@ public class ProfileResponseDto {
         private String email;
         private int followingsCount;
         private  int followersCount;
+        private long accountId;
+
 
         public int getFollowingsCount() {
             return followingsCount;
         }
+        public long getAccountId() {
+            return accountId;
+        }
 
         public void setFollowingsCount(int followingsCount) {
             this.followingsCount = followingsCount;
+        }
+        public void setAccountId(long accountId) {
+            this.accountId = accountId;
         }
 
         public int getFollowersCount() {
