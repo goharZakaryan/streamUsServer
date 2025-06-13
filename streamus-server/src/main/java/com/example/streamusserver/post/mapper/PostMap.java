@@ -34,6 +34,7 @@ public class PostMap {
         for (Post post : posts) {
             PostResponse postResponse = new PostResponse();
             postResponse.setId(post.getId());
+            postResponse.setCommentsCount(post.getCommentsCount());
             postResponse.setFromUserUsername(post.getAccount().getFullname());
             postResponse.setFromUserPhotoUrl(post.getAccount().getPhoto_url());
             postResponse.setFromUserId(post.getAccount().getId());
