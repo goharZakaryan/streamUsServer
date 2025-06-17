@@ -128,7 +128,7 @@ public class CommentServiceImpl implements CommentService {
         dto.setPostId(comment.getPost().getId());
         dto.setUserId(comment.getUser().getId());
         dto.setUsername(comment.getUser().getUsername());
-        dto.setUserAvatar(comment.getUser().getPhoto_url());
+        dto.setUserAvatar(comment.getUser().getPhotoUrl());
         dto.setContent(comment.getContent());
         dto.setCreatedAt(comment.getCreatedAt());
         dto.setUpdatedAt(comment.getUpdatedAt());

@@ -36,7 +36,7 @@ public class PostMap {
             postResponse.setId(post.getId());
             postResponse.setCommentsCount(post.getCommentsCount());
             postResponse.setFromUserUsername(post.getAccount().getFullname());
-            postResponse.setFromUserPhotoUrl(post.getAccount().getPhoto_url());
+            postResponse.setFromUserPhotoUrl(post.getAccount().getPhotoUrl());
             postResponse.setFromUserId(post.getAccount().getId());
             postResponse.setPostText(post.getPostText());
             postResponse.setMediaItem(mediaItemMapper.convertToMediaItemDTO(post.getMediaItem()));

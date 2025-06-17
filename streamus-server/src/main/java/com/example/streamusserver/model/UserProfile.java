@@ -25,7 +25,7 @@ public class UserProfile {
     private String username;
     private String fullname;
     private String password;
-    private String photo_url;
+    private String photoUrl;
     private String email;
     private String referrer;
     private String language;
@@ -71,12 +71,12 @@ public class UserProfile {
         this.password = password;
     }
 
-    public String getPhoto_url() {
-        return photo_url;
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
-    public void setPhoto_url(String photo_url) {
-        this.photo_url = photo_url;
+    public void setPhotoUrl(String photo_url) {
+        this.photoUrl = photo_url;
     }
 
     public String getEmail() {

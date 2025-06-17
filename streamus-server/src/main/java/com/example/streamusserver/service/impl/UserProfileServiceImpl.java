@@ -4,9 +4,11 @@ import com.example.streamusserver.config.EmailConfig;
 import com.example.streamusserver.dto.*;
 import com.example.streamusserver.mapper.UserProfileMapper;
 import com.example.streamusserver.model.UserProfile;
+import com.example.streamusserver.post.dto.response.UploadResponseDto;
 import com.example.streamusserver.post.mapper.MediaItemMapper;
 import com.example.streamusserver.post.model.MediaItem;
 import com.example.streamusserver.post.model.enums.ImageType;
+import com.example.streamusserver.post.postService.PostService;
 import com.example.streamusserver.post.repository.MediaItemRepository;
 import com.example.streamusserver.repository.UserProfileRepository;
 import com.example.streamusserver.security.JwtUtil;
@@ -23,6 +25,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
@@ -34,7 +37,9 @@ import java.util.stream.Collectors;
 public class UserProfileServiceImpl implements UserProfileService {
     private final EmailConfig emailConfig;
     private final MediaItemMapper mediaItemMapper;
-
+    @Autowired
+    @Lazy
+    private  PostService postService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final UserProfileRepository userProfileRepository;
@@ -304,6 +309,21 @@ public class UserProfileServiceImpl implements UserProfileService {
         searchResponse.setItemCount(profiles.size());
         searchResponse.setItems(profiles);
         return searchResponse;
+    }
+
+    @Override
+    public UploadResponseDto uploadProfilePic(MultipartFile file, Long accountId, String accessToken) {
+        if (!jwtUtil.isTokenValid(accessToken)) {
+            return new UploadResponseDto(true, "Invalid access token", null);
+        }
+
+        String imageUrl = "public/" + postService.saveFile(file, accountId);
+        UserProfile byId = userProfileRepository.findById(accountId).get();
+        byId.setPhotoUrl(imageUrl);
+
+        userProfileRepository.save(byId);
+
+        return new UploadResponseDto(false, "Upload successful", imageUrl);
     }
 
     public Optional<UserProfile> findById(Long id) {

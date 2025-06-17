@@ -2,11 +2,13 @@ package com.example.streamusserver.controller;
 
 
 import com.example.streamusserver.dto.*;
+import com.example.streamusserver.post.dto.response.UploadResponseDto;
 import com.example.streamusserver.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -99,5 +101,12 @@ public class UserProfileController {
         return ResponseEntity.ok(userProfileService.authorize(requestDto));
     }
 
+    @PostMapping("/upload/profilePic")
+    public ResponseEntity<UploadResponseDto> uploadFile(
+            @RequestParam("profile_pic") MultipartFile file,
+            @RequestParam("accountId") String accountId,
+            @RequestParam("accessToken") String accessToken) {
+        return ResponseEntity.ok(userProfileService.uploadProfilePic(file, Long.parseLong(accountId), accessToken));
 
+    }
 }

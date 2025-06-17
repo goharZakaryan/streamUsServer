@@ -46,7 +46,9 @@ public class PostServiceImpl implements PostService {
     private final JwtUtil jwtUtil;
     @Value("${file.path}")
     private String uploadDir;
-    private final UserProfileService userProfileService;
+    @Autowired
+
+    private  UserProfileService userProfileService;
     private final PostRepository postRepository;
     private final MediaItemRepository mediaItemRepository;
     @Autowired
@@ -184,7 +186,7 @@ public class PostServiceImpl implements PostService {
         return response;
     }
 
-    private String saveFile(MultipartFile file, Long accountId) {
+    public String saveFile(MultipartFile file, Long accountId) {
         if (file == null || file.isEmpty()) {
             return "";
         }

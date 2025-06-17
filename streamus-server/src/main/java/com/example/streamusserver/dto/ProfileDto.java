@@ -4,6 +4,7 @@ package com.example.streamusserver.dto;
 
 
 public class ProfileDto {
+    private String photoUrl;
 
     private long id;
 
@@ -515,6 +516,8 @@ public class ProfileDto {
         this.allowGalleryComments = allowGalleryComments;
     }
 
+
+
     public void setReaction(int reaction) {
 
         this.reaction = reaction;
@@ -525,4 +528,11 @@ public class ProfileDto {
         return this.reaction;
     }
 
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
 }

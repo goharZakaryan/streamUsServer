@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 
 public interface PostService {
+    String saveFile(MultipartFile file, Long accountId);
     Post updateItem(Post item);
     void deletePost(HideItemRequestDto itemRequestDto);
     boolean updateRepost(Long itemId, String userId);

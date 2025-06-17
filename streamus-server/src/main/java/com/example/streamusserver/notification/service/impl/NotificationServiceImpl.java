@@ -113,7 +113,7 @@ public class NotificationServiceImpl implements NotificationService {
 //                    notify.setCreateAt(notification.getCreatedAt().toString());
                     notify.setFromUserFullname(notification.getUserProfile().getFullname());
                     notify.setFromUserId(notification.getUserProfile().getId());
-                    notify.setFromUserPhotoUrl(notification.getUserProfile().getPhoto_url());
+                    notify.setFromUserPhotoUrl(notification.getUserProfile().getPhotoUrl());
                     notify.setFromUserUsername(notification.getUserProfile().getUsername());
                     notify.setFromUserState(notification.getUserProfile().getState());
                     notify.setItemId(notification.getPost().getId());
