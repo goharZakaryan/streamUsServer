@@ -1,6 +1,5 @@
 package com.example.streamusserver.post.postService.impl;
 
-import com.example.streamusserver.exception.CommentNotFoundException;
 import com.example.streamusserver.exception.PostNotFoundException;
 import com.example.streamusserver.exception.UserNotFoundException;
 import com.example.streamusserver.model.UserProfile;
@@ -39,6 +38,7 @@ public class CommentServiceImpl implements CommentService {
     private UserProfileService userProfileService;
     @Autowired
     private NotificationService notificationService;
+
     @Transactional
     public CommentResponseDto createComment(CommentRequestDto commentDTO) {
         Post post = postRepository.findById(commentDTO.getPostId())
@@ -57,12 +57,12 @@ public class CommentServiceImpl implements CommentService {
 //                    .orElseThrow(() -> new CommentNotFoundException(commentDTO.getParentCommentId()));
 //            comment.setParentComment(parentComment);
 //        }
-        int commentsCount=post.getComments().size();
+        int commentsCount = post.getComments().size();
         post.setCommentsCount(++commentsCount);
         postRepository.save(post);
         Comment savedComment = commentRepository.save(comment);
-        if (!user.equals(post.getAccount().getId())){
-            notificationService.createCommentNotification(user,post,commentDTO.getCommentText());
+        if (!user.equals(post.getAccount().getId())) {
+            notificationService.createCommentNotification(user, post, commentDTO.getCommentText());
 
         }
         return mapToDTO(savedComment);
@@ -75,12 +75,22 @@ public class CommentServiceImpl implements CommentService {
         return comments.map(this::mapToDTO);
     }
 
+    @Override
+    public List<Comment> getCommentsByPostId(Long postId) {
+        return commentRepository.findByPostId(postId);
+    }
+
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getCommentsByPostId(CommentRequestDto commentRequestDto) {
         List<Comment> comments = commentRepository.findByPostId(commentRequestDto.getPostId());
         List<CommentResponseDto> commentResponseDtos = comments.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
 
         return commentResponseDtos;
+    }
+
+    @Override
+    public void deleteAll(List<Comment> commentsByPostId) {
+        commentRepository.deleteAll(commentsByPostId);
     }
 
     @Transactional(readOnly = true)

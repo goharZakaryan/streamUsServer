@@ -106,6 +106,11 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.saveAll(notifications);
     }
 
+    @Override
+    public void deleteAllByPost(Post post) {
+        notificationRepository.deleteAllByPost(post);
+    }
+
     private List<Notify> mapNotificationToNotify(List<Notification> notifications) {
         return notifications.stream()
                 .map(notification -> {

@@ -15,5 +15,7 @@ public interface NotificationService {
 
     void markNotificationsAsRead(NotificationRequestDto notificationRequestDto);
 
+    void deleteAllByPost(Post post);
+
     Notification createCommentNotification(UserProfile commenterId, Post postId, String commentText);
 }

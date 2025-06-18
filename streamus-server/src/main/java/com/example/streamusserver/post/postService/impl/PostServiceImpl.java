@@ -14,6 +14,7 @@ import com.example.streamusserver.post.mapper.PostMap;
 import com.example.streamusserver.post.model.MediaItem;
 import com.example.streamusserver.post.model.Post;
 import com.example.streamusserver.post.model.enums.ImageType;
+import com.example.streamusserver.post.postService.CommentService;
 import com.example.streamusserver.post.postService.PostService;
 import com.example.streamusserver.post.repository.MediaItemRepository;
 import com.example.streamusserver.post.repository.PostRepository;
@@ -48,12 +49,14 @@ public class PostServiceImpl implements PostService {
     private String uploadDir;
     @Autowired
 
-    private  UserProfileService userProfileService;
+    private UserProfileService userProfileService;
     private final PostRepository postRepository;
     private final MediaItemRepository mediaItemRepository;
     @Autowired
     private NotificationService notificationService;
     private final PostMap postMapper;
+    @Autowired
+    private CommentService commentService;
 
     @Transactional
     @Override
@@ -85,7 +88,7 @@ public class PostServiceImpl implements PostService {
         Post post = findById(itemRequestDto.getPostId())
                 .orElseThrow(() -> new PostNotFoundException(itemRequestDto.getPostId()));
 
-        if (itemRequestDto.getType().equalsIgnoreCase(ImageType.PHOTO.name())){
+        if (itemRequestDto.getType().equalsIgnoreCase(ImageType.PHOTO.name())) {
             MediaItem mediaItem = mediaItemRepository.findByImageUrl(itemRequestDto.getItemUrl());
 
             List<MediaItem> mediaList = post.getMediaItem();
@@ -93,15 +96,18 @@ public class PostServiceImpl implements PostService {
             boolean removed = mediaList.remove(mediaItem);
             if (removed) {
                 post.setMediaItem(mediaList);
-                if (!mediaList.isEmpty()){
+                if (!mediaList.isEmpty()) {
+
                     postRepository.save(post); // Update the post
 
-                }else {
+                } else {
+                    commentService.deleteAll(commentService.getCommentsByPostId(post.getId()));
+                   notificationService.deleteAllByPost(post);
                     postRepository.delete(post);
                 }
                 mediaItemRepository.delete(mediaItem); // Delete from DB
             }
-        }else {
+        } else {
             mediaItemRepository.deleteByVideoUrl(itemRequestDto.getItemUrl());
         }
     }
