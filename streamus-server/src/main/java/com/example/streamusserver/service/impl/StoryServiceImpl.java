@@ -27,7 +27,7 @@ public class StoryServiceImpl implements StoryService {
     @Autowired
     private FileStorageService fileStorageService;
 
-    public Story createStory(Long userId, String storyType, String caption, MultipartFile mediaFile) {
+    public Story createStory(Long userId, String storyType, MultipartFile mediaFile) {
         try {
             // Upload media file
             String mediaUrl = fileStorageService.uploadFile(mediaFile, userId);
@@ -36,7 +36,7 @@ public class StoryServiceImpl implements StoryService {
             ImageType mediaType = storyType.equalsIgnoreCase("video") ?
                     ImageType.VIDEO : ImageType.PHOTO;
 
-            Story story = new Story(userId, mediaUrl, mediaType, caption);
+            Story story = new Story(userId, mediaUrl, mediaType);
             return storyRepository.save(story);
         } catch (Exception e) {
             throw new RuntimeException("Failed to create story", e);

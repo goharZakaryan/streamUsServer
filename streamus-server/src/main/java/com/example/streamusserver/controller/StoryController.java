@@ -22,12 +22,11 @@ public class StoryController {
     public ResponseEntity<Story> createStory(
             @RequestParam("userId") Long userId,
             @RequestParam("storyType") String storyType,
-            @RequestParam("caption") String caption,
             @RequestParam("media") MultipartFile mediaFile
     ) {
 
         try {
-            Story story = storyService.createStory(userId,storyType,caption, mediaFile);
+            Story story = storyService.createStory(userId,storyType, mediaFile);
             return ResponseEntity.ok(story);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();

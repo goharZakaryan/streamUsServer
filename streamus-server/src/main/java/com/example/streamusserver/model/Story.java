@@ -40,11 +40,10 @@ public class Story {
     // Constructors, getters, setters
     public Story() {}
 
-    public Story(Long userId, String mediaUrl, ImageType mediaType, String caption) {
+    public Story(Long userId, String mediaUrl, ImageType mediaType) {
         this.userId = userId;
         this.mediaUrl = mediaUrl;
         this.mediaType = mediaType;
-        this.caption = caption;
         this.createdAt = LocalDateTime.now();
         this.expiresAt = LocalDateTime.now().plusHours(24);
     }

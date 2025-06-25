@@ -15,7 +15,7 @@ public interface StoryService {
 
     void viewStory(Long storyId, Long viewerId);
 
-    Story createStory(Long userId, String storyType, String caption, MultipartFile mediaFile);
+    Story createStory(Long userId, String storyType, MultipartFile mediaFile);
 
     List<StoryGroup> getStoriesForUser(Long userId, List<Long> followingIds);
 }
