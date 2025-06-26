@@ -36,7 +36,7 @@ public class StoryServiceImpl implements StoryService {
             ImageType mediaType = storyType.equalsIgnoreCase("video") ?
                     ImageType.VIDEO : ImageType.PHOTO;
 
-            Story story = new Story(userId, mediaUrl, mediaType);
+            Story story = new Story(userId, "public/"+mediaUrl, mediaType);
             return storyRepository.save(story);
         } catch (Exception e) {
             throw new RuntimeException("Failed to create story", e);
