@@ -87,7 +87,7 @@ public class StoryServiceImpl implements StoryService {
         return new ArrayList<>(story.getViewedBy());
     }
 
-    public void deleteStory(Long storyId, Long userId) {
+    public void deleteStory(Long userId, Long storyId) {
         Story story = storyRepository.findById(storyId)
                 .orElseThrow(() -> new RuntimeException("Story not found"));
 

@@ -62,7 +62,7 @@ public class StoryController {
 
     @DeleteMapping("/{storyId}")
     public ResponseEntity<Void> deleteStory(
-            @PathVariable Long storyId,
+            @PathVariable(name = "storyId") Long storyId,
             @RequestParam Long userId) {
 
         storyService.deleteStory(storyId, userId);
