@@ -1,7 +1,7 @@
 package com.example.streamusserver.post.model;
 
+import com.example.streamusserver.model.Story;
 import com.example.streamusserver.model.UserProfile;
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -20,6 +20,9 @@ public class Like {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
+    @ManyToOne
+    @JoinColumn(name = "story_id")
+    private Story story;
 
     private LocalDateTime createdAt;
     private int likeCount;
@@ -54,6 +57,14 @@ public class Like {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Story getStory() {
+        return story;
+    }
+
+    public void setStory(Story story) {
+        this.story = story;
     }
 
     public int getLikeCount() {

@@ -1,5 +1,6 @@
 package com.example.streamusserver.post.postService.impl;
 
+import com.example.streamusserver.model.Story;
 import com.example.streamusserver.model.UserProfile;
 import com.example.streamusserver.notification.service.NotificationService;
 import com.example.streamusserver.post.dto.response.LikeResponse;
@@ -8,6 +9,7 @@ import com.example.streamusserver.post.model.Post;
 import com.example.streamusserver.post.postService.LikeService;
 import com.example.streamusserver.post.repository.LikeRepository;
 import com.example.streamusserver.post.repository.PostRepository;
+import com.example.streamusserver.service.StoryService;
 import com.example.streamusserver.service.UserProfileService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import java.time.LocalDateTime;
 public class LikeServiceImpl implements LikeService {
     @Autowired
     private LikeRepository likeRepository;
+    @Autowired
+    private StoryService storyService;
 
     @Autowired
     private PostRepository postRepository;
@@ -51,6 +55,32 @@ public class LikeServiceImpl implements LikeService {
                 notificationService.createLikeNotification(userId,postId,user,post);
 
             }
+            return new LikeResponse(true, ++likeCount); // Post liked
+        }
+    }
+
+  @Transactional
+    public LikeResponse likeStory(Long userId, Long storyId) {
+        boolean alreadyLiked = likeRepository.existsByUserIdAndPostId(userId, storyId);
+        int likeCount = getLikeCount(storyId);
+        if (alreadyLiked) {
+            likeRepository.deleteByUserIdAndPostId(userId, storyId);
+            return new LikeResponse(false, --likeCount); // Post unliked
+        } else {
+            UserProfile user = userProfileService.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            Story story = storyService.findById(storyId);
+
+            Like like = new Like();
+            like.setUser(user);
+            like.setStory(story);
+            like.setCreatedAt(LocalDateTime.now());
+
+            likeRepository.save(like);
+//            if (!userId.equals(story.getUserId())){
+//                notificationService.createLikeNotification(userId,storyId,user,story);
+//
+//            }
             return new LikeResponse(true, ++likeCount); // Post liked
         }
     }

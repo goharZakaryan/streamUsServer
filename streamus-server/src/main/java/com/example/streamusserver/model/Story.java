@@ -1,6 +1,8 @@
 package com.example.streamusserver.model;
 
+import com.example.streamusserver.post.model.Like;
 import com.example.streamusserver.post.model.enums.ImageType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -19,6 +21,9 @@ public class Story {
 
     @Column(nullable = false)
     private String mediaUrl;
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Like> likes = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     private ImageType mediaType; // IMAGE, VIDEO
@@ -38,7 +43,8 @@ public class Story {
     private Set<Long> viewedBy = new HashSet<>();
 
     // Constructors, getters, setters
-    public Story() {}
+    public Story() {
+    }
 
     public Story(Long userId, String mediaUrl, ImageType mediaType) {
         this.userId = userId;
@@ -120,4 +126,11 @@ public class Story {
         this.viewedBy = viewedBy;
     }
 
+    public Set<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<Like> likes) {
+        this.likes = likes;
+    }
 }

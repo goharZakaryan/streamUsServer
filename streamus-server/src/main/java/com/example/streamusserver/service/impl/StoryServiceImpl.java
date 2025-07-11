@@ -76,6 +76,11 @@ public class StoryServiceImpl implements StoryService {
         storyRepository.save(story);
     }
 
+    @Override
+    public Story findById(Long storyId) {
+        return storyRepository.findById(storyId).get();
+    }
+
     public List<Long> getStoryViewers(Long storyId, Long ownerId) {
         Story story = storyRepository.findById(storyId)
                 .orElseThrow(() -> new RuntimeException("Story not found"));

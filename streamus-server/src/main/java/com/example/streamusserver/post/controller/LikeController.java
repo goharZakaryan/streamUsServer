@@ -19,6 +19,13 @@ public class LikeController {
 
         return ResponseEntity.ok(likeService.toggleLike(userId, postId));
     }
+    @PostMapping("/story")
+    public ResponseEntity<LikeResponse> likeStory(
+            @RequestParam Long userId,
+            @RequestParam Long storyId) {
+
+        return ResponseEntity.ok(likeService.likeStory(userId, storyId));
+    }
 
     @GetMapping("/status")
     public ResponseEntity<LikeResponse> getLikeStatus(

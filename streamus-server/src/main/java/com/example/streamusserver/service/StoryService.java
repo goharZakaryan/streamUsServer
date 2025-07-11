@@ -1,6 +1,5 @@
 package com.example.streamusserver.service;
 
-import com.example.streamusserver.dto.reduest.StoryRequestDto;
 import com.example.streamusserver.model.Story;
 import com.example.streamusserver.model.StoryGroup;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +13,8 @@ public interface StoryService {
     List<Long> getStoryViewers(Long storyId, Long ownerId);
 
     void viewStory(Long storyId, Long viewerId);
+
+    Story findById(Long storyId);
 
     Story createStory(Long userId, String storyType, MultipartFile mediaFile);
 
