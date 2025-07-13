@@ -7,5 +7,6 @@ public interface LikeService {
     LikeResponse likeStory(Long userId, Long storyId);
     LikeResponse getLike(Long userId, Long postId);
     int getLikeCount(Long postId);
+    boolean checkIfUserLikedStory(Long userId, Long storyId);
     boolean checkIfUserLikedPost(Long userId, Long postId);
 }

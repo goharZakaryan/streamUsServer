@@ -19,6 +19,7 @@ public class LikeController {
 
         return ResponseEntity.ok(likeService.toggleLike(userId, postId));
     }
+
     @PostMapping("/story")
     public ResponseEntity<LikeResponse> likeStory(
             @RequestParam Long userId,
@@ -33,5 +34,13 @@ public class LikeController {
             @RequestParam Long postId) {
 
         return ResponseEntity.ok(likeService.getLike(userId, postId));
+    }
+
+    @GetMapping("/story/isLike")
+    public ResponseEntity<Boolean> isLike(
+            @RequestParam Long userId,
+            @RequestParam Long storyId) {
+
+        return ResponseEntity.ok(likeService.checkIfUserLikedStory(userId, storyId));
     }
 }

@@ -95,6 +95,9 @@ public class LikeServiceImpl implements LikeService {
     public boolean checkIfUserLikedPost(Long userId, Long postId) {
         return likeRepository.existsByUserIdAndPostId(userId, postId);
     }
+    public boolean checkIfUserLikedStory(Long userId, Long storyId) {
+        return likeRepository.existsByUserIdAndStory_Id(userId, storyId);
+    }
 
     public int getLikeCount(Long postId) {
         return likeRepository.countByPostId(postId);
