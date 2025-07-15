@@ -37,7 +37,7 @@ public class LikeController {
     }
 
     @GetMapping("/story/isLike")
-    public ResponseEntity<Boolean> isLike(
+    public ResponseEntity<LikeResponse> isLike(
             @RequestParam Long userId,
             @RequestParam Long storyId) {
 
