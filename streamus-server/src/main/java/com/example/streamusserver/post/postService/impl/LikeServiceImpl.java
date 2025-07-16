@@ -98,24 +98,9 @@ public class LikeServiceImpl implements LikeService {
 
     public LikeResponse checkIfUserLikedStory(Long storyId, Long userId) {
         boolean alreadyLiked = likeRepository.existsByUserIdAndStory_Id(userId, storyId);
-        int likeCount = getStoryLikeCount(storyId);
-        if (alreadyLiked) {
-            likeRepository.deleteByUserIdAndStory_Id(userId, storyId);
-            return new LikeResponse(false, --likeCount); // Post unliked
-        } else {
-            UserProfile user = userProfileService.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            Story story = storyService.findById(storyId);
 
-            Like like = new Like();
-            like.setUser(user);
-            like.setStory(story);
-            like.setCreatedAt(LocalDateTime.now());
+        return new LikeResponse(alreadyLiked, getStoryLikeCount(storyId)); // Post liked// Post liked
 
-            likeRepository.save(like);
-
-            return new LikeResponse(true, ++likeCount); // Post liked
-        }
     }
 
     public int getLikeCount(Long postId) {
