@@ -1,7 +1,7 @@
 package com.example.streamusserver.dto;
 
 
-
+import com.example.streamusserver.model.UserProfile;
 
 public class ProfileDto {
     private String photoUrl;
@@ -32,6 +32,8 @@ public class ProfileDto {
 
     private Boolean online = false;
 
+    public ProfileDto(UserProfile profile) {
+    }
 
     public void setDistance(double distance) {
 
@@ -515,7 +517,6 @@ public class ProfileDto {
 
         this.allowGalleryComments = allowGalleryComments;
     }
-
 
 
     public void setReaction(int reaction) {

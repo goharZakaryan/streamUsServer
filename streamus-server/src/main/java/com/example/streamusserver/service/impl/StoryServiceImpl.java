@@ -1,10 +1,12 @@
 package com.example.streamusserver.service.impl;
 
-import com.example.streamusserver.dto.reduest.StoryRequestDto;
+import com.example.streamusserver.dto.response.StoryViewResponseDTO;
 import com.example.streamusserver.model.Story;
 import com.example.streamusserver.model.StoryGroup;
+import com.example.streamusserver.model.StoryView;
 import com.example.streamusserver.post.model.enums.ImageType;
 import com.example.streamusserver.repository.StoryRepository;
+import com.example.streamusserver.repository.StoryViewRepository;
 import com.example.streamusserver.service.StoryService;
 import com.example.streamusserver.util.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class StoryServiceImpl implements StoryService {
 
     @Autowired
     private FileStorageService fileStorageService;
+    @Autowired
+    private StoryViewRepository storyViewRepository;
 
     public Story createStory(Long userId, String storyType, MultipartFile mediaFile) {
         try {
@@ -36,7 +40,7 @@ public class StoryServiceImpl implements StoryService {
             ImageType mediaType = storyType.equalsIgnoreCase("video") ?
                     ImageType.VIDEO : ImageType.PHOTO;
 
-            Story story = new Story(userId, "public/"+mediaUrl, mediaType);
+            Story story = new Story(userId, "public/" + mediaUrl, mediaType);
             return storyRepository.save(story);
         } catch (Exception e) {
             throw new RuntimeException("Failed to create story", e);
@@ -81,15 +85,19 @@ public class StoryServiceImpl implements StoryService {
         return storyRepository.findById(storyId).get();
     }
 
-    public List<Long> getStoryViewers(Long storyId, Long ownerId) {
+    public List<StoryViewResponseDTO> getStoryViewers(Long storyId, Long ownerId) {
         Story story = storyRepository.findById(storyId)
                 .orElseThrow(() -> new RuntimeException("Story not found"));
 
+        // Only story owner can see viewers
         if (!story.getUserId().equals(ownerId)) {
-            throw new RuntimeException("Not authorized to view story viewers");
+            throw new RuntimeException("Access denied");
         }
 
-        return new ArrayList<>(story.getViewedBy());
+        List<StoryView> views = storyViewRepository.findByStoryIdOrderByViewedAtDesc(storyId);
+        return views.stream()
+                .map(StoryViewResponseDTO::new)
+                .collect(Collectors.toList());
     }
 
     public void deleteStory(Long userId, Long storyId) {

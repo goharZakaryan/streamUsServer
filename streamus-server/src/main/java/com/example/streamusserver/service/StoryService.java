@@ -1,5 +1,6 @@
 package com.example.streamusserver.service;
 
+import com.example.streamusserver.dto.response.StoryViewResponseDTO;
 import com.example.streamusserver.model.Story;
 import com.example.streamusserver.model.StoryGroup;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,7 +11,7 @@ public interface StoryService {
 
     void deleteStory(Long storyId, Long userId);
 
-    List<Long> getStoryViewers(Long storyId, Long ownerId);
+    List<StoryViewResponseDTO> getStoryViewers(Long storyId, Long ownerId);
 
     void viewStory(Long storyId, Long viewerId);
 

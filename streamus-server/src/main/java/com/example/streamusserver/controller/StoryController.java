@@ -1,8 +1,10 @@
 package com.example.streamusserver.controller;
 
 import com.example.streamusserver.dto.reduest.StoryRequestDto;
+import com.example.streamusserver.dto.response.StoryViewResponseDTO;
 import com.example.streamusserver.model.Story;
 import com.example.streamusserver.model.StoryGroup;
+import com.example.streamusserver.model.StoryView;
 import com.example.streamusserver.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,23 +44,7 @@ public class StoryController {
         return ResponseEntity.ok(stories);
     }
 
-    @PostMapping("/{storyId}/view")
-    public ResponseEntity<Void> viewStory(
-            @PathVariable Long storyId,
-            @RequestParam Long viewerId) {
 
-        storyService.viewStory(storyId, viewerId);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/{storyId}/viewers")
-    public ResponseEntity<List<Long>> getStoryViewers(
-            @PathVariable Long storyId,
-            @RequestParam Long ownerId) {
-
-        List<Long> viewers = storyService.getStoryViewers(storyId, ownerId);
-        return ResponseEntity.ok(viewers);
-    }
 
     @DeleteMapping("/{storyId}")
     public ResponseEntity<Void> deleteStory(
@@ -67,5 +53,20 @@ public class StoryController {
 
         storyService.deleteStory(storyId, userId);
         return ResponseEntity.ok().build();
+    }
+    @PostMapping("/{storyId}/view")
+    public ResponseEntity<Void> viewStory(
+            @PathVariable Long storyId,
+            @RequestParam Long viewerId) {
+        storyService.viewStory(storyId, viewerId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{storyId}/viewers")
+    public ResponseEntity<List<StoryViewResponseDTO>> getStoryViewers(
+            @PathVariable Long storyId,
+            @RequestParam Long ownerId) {
+        List<StoryViewResponseDTO> viewers = storyService.getStoryViewers(storyId, ownerId);
+        return ResponseEntity.ok(viewers);
     }
 }
