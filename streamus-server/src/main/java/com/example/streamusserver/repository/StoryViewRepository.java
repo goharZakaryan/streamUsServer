@@ -18,4 +18,7 @@ public interface StoryViewRepository extends JpaRepository<StoryView, Long> {
 
     @Query("SELECT CASE WHEN COUNT(sv) > 0 THEN true ELSE false END FROM StoryView sv WHERE sv.story.id = :storyId AND sv.viewer.id = :viewerId")
     boolean existsByStoryIdAndViewerId(@Param("storyId") Long storyId, @Param("viewerId") Long viewerId);
-}
+
+    List<Long> findViewedStoryIdsByViewerId(Long currentUserId);
+    @Query("SELECT COUNT(sv) FROM StoryView sv WHERE sv.story.id = :storyId")
+    int findCountByStoryId(@Param("storyId") Long storyId);}

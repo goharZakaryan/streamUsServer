@@ -46,31 +46,45 @@ public class StoryServiceImpl implements StoryService {
             throw new RuntimeException("Failed to create story", e);
         }
     }
-
     public List<StoryGroup> getStoriesForUser(Long currentUserId, List<Long> followingUserIds) {
-        // Clean up expired stories first
+        // Deactivate expired stories
         storyRepository.deactivateExpiredStories(LocalDateTime.now());
 
-        // Get all user IDs including current user
+        // Get all user IDs (current + following)
         List<Long> allUserIds = new ArrayList<>(followingUserIds);
         allUserIds.add(currentUserId);
 
+        // Fetch active stories
         List<Story> stories = storyRepository.findActiveStoriesByUserIds(allUserIds, LocalDateTime.now());
+
+        // Get IDs of stories viewed by current user
+
+        // Mark each story as viewed or not
+        for (Story story : stories) {
+            int viewersCount=storyViewRepository.findCountByStoryId(story.getId());
+            if (viewersCount>0) {
+                story.setViewed(true);
+            }
+            story.setViewed(false);
+
+            story.setViewerCount(viewersCount);
+        }
 
         // Group stories by user
         Map<Long, List<Story>> groupedStories = stories.stream()
                 .collect(Collectors.groupingBy(Story::getUserId));
 
+        // Convert to StoryGroup and sort
         return groupedStories.entrySet().stream()
                 .map(entry -> new StoryGroup(entry.getKey(), entry.getValue()))
                 .sorted((a, b) -> {
-                    // Current user's stories first, then by latest story
                     if (a.getUserId().equals(currentUserId)) return -1;
                     if (b.getUserId().equals(currentUserId)) return 1;
                     return b.getLatestStoryTime().compareTo(a.getLatestStoryTime());
                 })
                 .collect(Collectors.toList());
     }
+
 
     public void viewStory(Long storyId, Long viewerId) {
         Story story = storyRepository.findById(storyId)

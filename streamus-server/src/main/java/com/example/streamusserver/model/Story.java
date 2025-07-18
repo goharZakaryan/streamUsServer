@@ -32,6 +32,8 @@ public class Story {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+    @Transient
+    private boolean viewedByCurrentUser;
 
     @Column(nullable = false)
     private LocalDateTime expiresAt; // Stories expire after 24 hours
@@ -41,6 +43,8 @@ public class Story {
     @ElementCollection
     @CollectionTable(name = "story_views", joinColumns = @JoinColumn(name = "story_id"))
     private Set<Long> viewedBy = new HashSet<>();
+    private int viewerCount;
+    private Boolean viewed;
 
     // Constructors, getters, setters
     public Story() {
@@ -130,7 +134,31 @@ public class Story {
         return likes;
     }
 
+    public boolean isViewedByCurrentUser() {
+        return viewedByCurrentUser;
+    }
+
+    public void setViewedByCurrentUser(boolean viewedByCurrentUser) {
+        this.viewedByCurrentUser = viewedByCurrentUser;
+    }
+
+    public int getViewerCount() {
+        return viewerCount;
+    }
+
+    public void setViewerCount(int viewerCount) {
+        this.viewerCount = viewerCount;
+    }
+
     public void setLikes(Set<Like> likes) {
         this.likes = likes;
+    }
+
+    public Boolean getViewed() {
+        return viewed;
+    }
+
+    public void setViewed(Boolean viewed) {
+        this.viewed = viewed;
     }
 }
