@@ -1,5 +1,8 @@
 package com.example.streamusserver.service;
 
+import com.example.streamusserver.dto.guests.GuestsRequest;
+import com.example.streamusserver.dto.guests.GuestsResponse;
+import com.example.streamusserver.dto.reduest.StoryViewersRequestDto;
 import com.example.streamusserver.dto.response.StoryViewResponseDTO;
 import com.example.streamusserver.model.Story;
 import com.example.streamusserver.model.StoryGroup;
@@ -20,4 +23,6 @@ public interface StoryService {
     Story createStory(Long userId, String storyType, MultipartFile mediaFile);
 
     List<StoryGroup> getStoriesForUser(Long userId, List<Long> followingIds);
+
+    GuestsResponse getViewers(StoryViewersRequestDto request);
 }

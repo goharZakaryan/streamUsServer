@@ -1,18 +1,24 @@
 package com.example.streamusserver.service.impl;
 
+import com.example.streamusserver.dto.guests.GuestDto;
+import com.example.streamusserver.dto.guests.GuestsRequest;
+import com.example.streamusserver.dto.guests.GuestsResponse;
+import com.example.streamusserver.dto.reduest.StoryViewersRequestDto;
 import com.example.streamusserver.dto.response.StoryViewResponseDTO;
-import com.example.streamusserver.model.Story;
-import com.example.streamusserver.model.StoryGroup;
-import com.example.streamusserver.model.StoryView;
+import com.example.streamusserver.exception.UserNotFoundException;
+import com.example.streamusserver.model.*;
 import com.example.streamusserver.post.model.enums.ImageType;
 import com.example.streamusserver.repository.StoryRepository;
 import com.example.streamusserver.repository.StoryViewRepository;
 import com.example.streamusserver.service.StoryService;
+import com.example.streamusserver.service.UserProfileService;
 import com.example.streamusserver.util.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,6 +31,8 @@ import java.util.stream.Collectors;
 public class StoryServiceImpl implements StoryService {
     @Autowired
     private StoryRepository storyRepository;
+    @Autowired
+    private UserProfileService userProfileService;
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -85,6 +93,31 @@ public class StoryServiceImpl implements StoryService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public GuestsResponse getViewers(StoryViewersRequestDto request) {
+        GuestsResponse response = new GuestsResponse();
+
+        try {
+//            // Validate access token
+//            if (!jwtUtil.isTokenValid(request.getAccessToken())) {
+//                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to follow/unfollow on behalf of this account");
+//            }
+            UserProfile guestToProfile = userProfileService.findById(request.getAccountId())
+                    .orElseThrow(() -> new UserNotFoundException("Profile not found"));
+
+            // Fetch guests
+            List<StoryView> guests = storyViewRepository.findByStoryIdOrderByViewedAtDesc(request.getStoryId());
+
+            response.setError(false);
+            response.setItemId(guests.isEmpty() ? 0 : (int) guests.get(guests.size() - 1).getId());
+            response.setGuests(guestsDto(guests));
+            guests.forEach(guest -> guest.setViewed(true));
+            return response;
+        } catch (Exception e) {
+            response.setError(true);
+            return response;
+        }    }
+
 
     public void viewStory(Long storyId, Long viewerId) {
         Story story = storyRepository.findById(storyId)
@@ -125,4 +158,24 @@ public class StoryServiceImpl implements StoryService {
         story.setActive(false);
         storyRepository.save(story);
     }
+    private List<GuestDto> guestsDto(List<StoryView> guests) {
+        return guests.stream()
+                .map(guest -> {
+                    GuestDto guestDto = new GuestDto();
+                    guestDto.setId(guest.getId());
+                    guestDto.setViewed(guest.getViewed());
+                    guestDto.setGuestUserFullname(guest.getGuestUserFullname());
+                    guestDto.setGuestUserUsername(guest.getGuestUserUsername());
+                    guestDto.setGuestUserPhoto(guest.getGuestUserPhoto());
+//                    guestDto.setGuestTo(guest.getGuestTo().getId()); // Assuming guestTo is a UserProfile
+//                    guestDto.setGuestUserId(guest.g().getId()); // Assuming guestUserId is a UserProfile
+                    guestDto.setVerify(guest.getVerify());
+                    guestDto.setVip(guest.getVip());
+                    guestDto.setTimeAgo(guest.getTimeAgo());
+
+                    return guestDto;
+                })
+                .collect(Collectors.toList());
+    }
+
 }

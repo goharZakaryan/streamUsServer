@@ -1,6 +1,9 @@
 package com.example.streamusserver.controller;
 
+import com.example.streamusserver.dto.guests.GuestsRequest;
+import com.example.streamusserver.dto.guests.GuestsResponse;
 import com.example.streamusserver.dto.reduest.StoryRequestDto;
+import com.example.streamusserver.dto.reduest.StoryViewersRequestDto;
 import com.example.streamusserver.dto.response.StoryViewResponseDTO;
 import com.example.streamusserver.model.Story;
 import com.example.streamusserver.model.StoryGroup;
@@ -68,5 +71,9 @@ public class StoryController {
             @RequestParam Long ownerId) {
         List<StoryViewResponseDTO> viewers = storyService.getStoryViewers(storyId, ownerId);
         return ResponseEntity.ok(viewers);
+    }
+    @PostMapping("/viewers")
+    public ResponseEntity<GuestsResponse> getGuests(@RequestBody StoryViewersRequestDto request) {
+        return ResponseEntity.ok(storyService.getViewers(request));
     }
 }
