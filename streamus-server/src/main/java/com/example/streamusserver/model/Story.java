@@ -39,10 +39,8 @@ public class Story {
     private LocalDateTime expiresAt; // Stories expire after 24 hours
 
     private boolean isActive = true;
-
-    @ElementCollection
-    @CollectionTable(name = "story_views", joinColumns = @JoinColumn(name = "story_id"))
-    private Set<Long> viewedBy = new HashSet<>();
+    @OneToMany
+    private Set<UserProfile> viewedBy = new HashSet<>();
     private int viewerCount;
     private Boolean viewed;
 
@@ -122,11 +120,11 @@ public class Story {
         isActive = active;
     }
 
-    public Set<Long> getViewedBy() {
+    public Set<UserProfile> getViewedBy() {
         return viewedBy;
     }
 
-    public void setViewedBy(Set<Long> viewedBy) {
+    public void setViewedBy(Set<UserProfile> viewedBy) {
         this.viewedBy = viewedBy;
     }
 

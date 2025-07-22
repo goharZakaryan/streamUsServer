@@ -1,12 +1,14 @@
 package com.example.streamusserver.service.impl;
 
 import com.example.streamusserver.dto.guests.GuestDto;
-import com.example.streamusserver.dto.guests.GuestsRequest;
 import com.example.streamusserver.dto.guests.GuestsResponse;
 import com.example.streamusserver.dto.reduest.StoryViewersRequestDto;
 import com.example.streamusserver.dto.response.StoryViewResponseDTO;
 import com.example.streamusserver.exception.UserNotFoundException;
-import com.example.streamusserver.model.*;
+import com.example.streamusserver.model.Story;
+import com.example.streamusserver.model.StoryGroup;
+import com.example.streamusserver.model.StoryView;
+import com.example.streamusserver.model.UserProfile;
 import com.example.streamusserver.post.model.enums.ImageType;
 import com.example.streamusserver.repository.StoryRepository;
 import com.example.streamusserver.repository.StoryViewRepository;
@@ -14,16 +16,15 @@ import com.example.streamusserver.service.StoryService;
 import com.example.streamusserver.service.UserProfileService;
 import com.example.streamusserver.util.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,6 +55,7 @@ public class StoryServiceImpl implements StoryService {
             throw new RuntimeException("Failed to create story", e);
         }
     }
+
     public List<StoryGroup> getStoriesForUser(Long currentUserId, List<Long> followingUserIds) {
         // Deactivate expired stories
         storyRepository.deactivateExpiredStories(LocalDateTime.now());
@@ -69,8 +71,8 @@ public class StoryServiceImpl implements StoryService {
 
         // Mark each story as viewed or not
         for (Story story : stories) {
-            int viewersCount=storyViewRepository.findCountByStoryId(story.getId());
-            if (viewersCount>0) {
+            int viewersCount = storyViewRepository.findCountByStoryId(story.getId());
+            if (viewersCount > 0) {
                 story.setViewed(true);
             }
             story.setViewed(false);
@@ -106,24 +108,27 @@ public class StoryServiceImpl implements StoryService {
                     .orElseThrow(() -> new UserNotFoundException("Profile not found"));
 
             // Fetch guests
-            List<StoryView> guests = storyViewRepository.findByStoryIdOrderByViewedAtDesc(request.getStoryId());
+            Story story = storyRepository.findById(request.getItemId()).get();
 
             response.setError(false);
-            response.setItemId(guests.isEmpty() ? 0 : (int) guests.get(guests.size() - 1).getId());
-            response.setGuests(guestsDto(guests));
-            guests.forEach(guest -> guest.setViewed(true));
+//            response.setItemId(guests.isEmpty() ? 0 : (int) guests.get(guests.size() - 1).getId());
+            response.setGuests(guestsDto(story.getViewedBy()));
+//            guests.forEach(guest -> guest.setViewed(true));
             return response;
         } catch (Exception e) {
             response.setError(true);
             return response;
-        }    }
+        }
+    }
 
 
     public void viewStory(Long storyId, Long viewerId) {
         Story story = storyRepository.findById(storyId)
                 .orElseThrow(() -> new RuntimeException("Story not found"));
+        UserProfile userProfile = userProfileService.findById(viewerId)
+                .orElseThrow(() -> new RuntimeException("Story not found"));
 
-        story.getViewedBy().add(viewerId);
+        story.getViewedBy().add(userProfile);
         storyRepository.save(story);
     }
 
@@ -158,20 +163,19 @@ public class StoryServiceImpl implements StoryService {
         story.setActive(false);
         storyRepository.save(story);
     }
-    private List<GuestDto> guestsDto(List<StoryView> guests) {
+
+    private List<GuestDto> guestsDto(Set<UserProfile> guests) {
         return guests.stream()
                 .map(guest -> {
                     GuestDto guestDto = new GuestDto();
                     guestDto.setId(guest.getId());
-                    guestDto.setViewed(guest.getViewed());
-                    guestDto.setGuestUserFullname(guest.getGuestUserFullname());
-                    guestDto.setGuestUserUsername(guest.getGuestUserUsername());
-                    guestDto.setGuestUserPhoto(guest.getGuestUserPhoto());
+//                    guestDto.setViewed(guest.getViewed());
+                    guestDto.setGuestUserFullname(guest.getFullname());
+                    guestDto.setGuestUserUsername(guest.getUsername());
+                    guestDto.setGuestUserPhoto(guest.getPhotoUrl());
 //                    guestDto.setGuestTo(guest.getGuestTo().getId()); // Assuming guestTo is a UserProfile
 //                    guestDto.setGuestUserId(guest.g().getId()); // Assuming guestUserId is a UserProfile
-                    guestDto.setVerify(guest.getVerify());
-                    guestDto.setVip(guest.getVip());
-                    guestDto.setTimeAgo(guest.getTimeAgo());
+
 
                     return guestDto;
                 })
