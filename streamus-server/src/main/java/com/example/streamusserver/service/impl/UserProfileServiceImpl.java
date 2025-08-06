@@ -2,6 +2,7 @@ package com.example.streamusserver.service.impl;
 
 import com.example.streamusserver.config.EmailConfig;
 import com.example.streamusserver.dto.*;
+import com.example.streamusserver.dto.reduest.FollowersRequestDto;
 import com.example.streamusserver.mapper.UserProfileMapper;
 import com.example.streamusserver.model.UserProfile;
 import com.example.streamusserver.post.dto.response.UploadResponseDto;
@@ -210,6 +211,14 @@ public class UserProfileServiceImpl implements UserProfileService {
         accountDetails.setFollowingsCount(followRequestService.countByFollowing(userProfile));
 
         return new ProfileResponseDto(false, 200, "Authorization successful", Collections.singletonList(accountDetails), userProfile.getId());
+    }
+
+    @Override
+    public List<UserProfile> getFollowers(FollowersRequestDto requestDto) {
+        Long profileId = requestDto.getProfileId();
+        List<UserProfile> followersSet =  followRequestService.findAllFollowers(profileId);
+
+        return new ArrayList<>(followersSet);
     }
 
 //

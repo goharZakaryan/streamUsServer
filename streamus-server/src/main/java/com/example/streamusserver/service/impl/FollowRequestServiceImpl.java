@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -78,6 +79,11 @@ public class FollowRequestServiceImpl implements FollowRequestService {
                     .error(true)
                     .build();
         }
+    }
+
+    @Override
+    public List<UserProfile> findAllFollowers(Long profile) {
+        return followRequestRepository.findAllFollowerByFollowingId(profile);
     }
 
     public boolean isFollowing(Long authenticatedUser, Long profile) {

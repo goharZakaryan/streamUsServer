@@ -2,6 +2,8 @@ package com.example.streamusserver.controller;
 
 
 import com.example.streamusserver.dto.*;
+import com.example.streamusserver.dto.reduest.FollowersRequestDto;
+import com.example.streamusserver.model.UserProfile;
 import com.example.streamusserver.post.dto.response.UploadResponseDto;
 import com.example.streamusserver.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +67,19 @@ public class UserProfileController {
 
         return ResponseEntity.ok(userProfileService.getProfile(id));
     }
-
+    @PostMapping("/profile/followers")
+    public ResponseEntity<SearchResponse> getFollowers(@RequestBody FollowersRequestDto requestDto) {
+        SearchResponse response = new SearchResponse();
+        try {
+            List<UserProfile> followers = userProfileService.getFollowers(requestDto);
+            response.setItems(followers);
+            response.setError(false);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setError(true);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
     @GetMapping("/account/confirmEmail")
     public ResponseEntity<Integer> confirmEmail(@RequestParam("confirmEmail") String confirmEmail) {
         try {

@@ -1,6 +1,7 @@
 package com.example.streamusserver.service;
 
 import com.example.streamusserver.dto.*;
+import com.example.streamusserver.dto.reduest.FollowersRequestDto;
 import com.example.streamusserver.model.UserProfile;
 import com.example.streamusserver.post.dto.response.UploadResponseDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,4 +27,6 @@ public interface UserProfileService {
     ProfileDto getProfile(Long id);
 
     ProfileResponseDto authorize(AuthenticationRequestDto authenticationRequestDto);
+
+    List<UserProfile> getFollowers(FollowersRequestDto requestDto);
 }
