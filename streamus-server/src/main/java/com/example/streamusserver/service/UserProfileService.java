@@ -29,4 +29,5 @@ public interface UserProfileService {
     ProfileResponseDto authorize(AuthenticationRequestDto authenticationRequestDto);
 
     List<UserProfile> getFollowers(FollowersRequestDto requestDto);
+    List<UserProfile> getFollowings(FollowersRequestDto requestDto);
 }

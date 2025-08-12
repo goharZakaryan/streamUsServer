@@ -219,6 +219,12 @@ public class UserProfileServiceImpl implements UserProfileService {
         List<UserProfile> followersSet =  followRequestService.findAllFollowers(profileId);
 
         return new ArrayList<>(followersSet);
+    }  @Override
+    public List<UserProfile> getFollowings(FollowersRequestDto requestDto) {
+        Long profileId = requestDto.getProfileId();
+        List<UserProfile> followersSet =  followRequestService.findAllFollowings(profileId);
+
+        return new ArrayList<>(followersSet);
     }
 
 //

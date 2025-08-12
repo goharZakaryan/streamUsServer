@@ -80,6 +80,19 @@ public class UserProfileController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+    @PostMapping("/profile/friends")
+    public ResponseEntity<SearchResponse> getFollowings(@RequestBody FollowersRequestDto requestDto) {
+        SearchResponse response = new SearchResponse();
+        try {
+            List<UserProfile> followers = userProfileService.getFollowings(requestDto);
+            response.setItems(followers);
+            response.setError(false);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setError(true);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
     @GetMapping("/account/confirmEmail")
     public ResponseEntity<Integer> confirmEmail(@RequestParam("confirmEmail") String confirmEmail) {
         try {

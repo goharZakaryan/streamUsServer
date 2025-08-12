@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface FollowRequestService {
     List<UserProfile> findAllFollowers(Long profile);
+    List<UserProfile> findAllFollowings(Long profile);
 
     boolean isFollowing(Long authenticatedUser, Long profile);
 
