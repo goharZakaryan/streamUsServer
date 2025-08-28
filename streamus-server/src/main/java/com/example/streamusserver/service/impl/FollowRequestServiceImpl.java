@@ -86,7 +86,7 @@ public class FollowRequestServiceImpl implements FollowRequestService {
         return followRequestRepository.findAllFollowerByFollowingId(profile);
     }    @Override
     public List<UserProfile> findAllFollowings(Long profile) {
-        return followRequestRepository.findAllFollowerByFollowerId(profile);
+        return followRequestRepository.findAllFollowings(profile);
     }
 
     public boolean isFollowing(Long authenticatedUser, Long profile) {
