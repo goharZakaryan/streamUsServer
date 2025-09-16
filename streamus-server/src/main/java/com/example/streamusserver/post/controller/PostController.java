@@ -40,12 +40,14 @@ public class PostController {
         PostResponseDto response = postService.savePostToDatabase(postRequest);
         return ResponseEntity.ok(response);
     }
+
     @PostMapping("/stream/get")
     public ResponseEntity<StreamResponseDto> streamGet(@RequestBody StreamRequestDto postRequest) {
         System.out.println("savepost");
         StreamResponseDto response = postService.getItems(postRequest);
         return ResponseEntity.ok(response);
     }
+
     @PostMapping("/items")
     public ResponseEntity<StreamResponseDto> getItems(@RequestBody StreamRequestDto request) {
         StreamResponseDto response = postService.getItems(request);
@@ -79,13 +81,24 @@ public class PostController {
         return ResponseEntity.ok(postService.uploadedFile(file, Long.parseLong(accountId), accessToken));
 
     }
+
+    @PostMapping("/upload/music")
+    public ResponseEntity<UploadResponseDto> uploadMusic(
+            @RequestParam("uploaded_music") MultipartFile file,
+            @RequestParam("accountId") String accountId,
+            @RequestParam("accessToken") String accessToken)  {
+        System.out.println("music");
+        return ResponseEntity.ok(postService.uploadedFile(file, Long.parseLong(accountId), accessToken));
+
+    }
+
     @PostMapping("/upload/video")
     public ResponseEntity<UploadResponseDto> uploadVideo(
             @RequestParam("uploaded_video_file") MultipartFile videoFile,
             @RequestParam("uploaded_file") MultipartFile file,
             @RequestParam("accountId") String accountId,
             @RequestParam("accessToken") String accessToken) {
-        return ResponseEntity.ok(postService.uploadedVideoFile(videoFile,file, Long.parseLong(accountId), accessToken));
+        return ResponseEntity.ok(postService.uploadedVideoFile(videoFile, file, Long.parseLong(accountId), accessToken));
 
     }
 
