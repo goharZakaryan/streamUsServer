@@ -12,6 +12,7 @@ public class MediaItem {
     public Long id;
     private String selectedImageFileName;
     private String imageUrl;
+    private String audioUrl;
     private String selectedVideoFileName;
     private String videoUrl;
     @Enumerated(EnumType.STRING)

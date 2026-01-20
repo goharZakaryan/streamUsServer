@@ -10,9 +10,7 @@ import java.util.Optional;
 public interface MediaItemRepository extends JpaRepository<MediaItem, Long> {
 
     //    Page findByPostAccountIdAndType(Long userId, String mediaType, Pageable pageable);
-    void deleteByImageUrl(String imageUrl);
     void deleteByVideoUrl(String imageUrl);
-    MediaItem findByVideoUrl(String imageUrl);
     MediaItem findByImageUrl(String imageUrl);
 
     List<MediaItem> findByPostAccountIdAndType(Long post_account_id, ImageType type);

@@ -136,6 +136,7 @@ public class PostServiceImpl implements PostService {
                     MediaItem mediaItem = new MediaItem();
                     mediaItem.setImageUrl(imageUrl.getImageUrl());
                     mediaItem.setVideoUrl(imageUrl.getVideoUrl() != null ? imageUrl.getVideoUrl() : "");
+                    mediaItem.setAudioUrl(imageUrl.getAudioUrl() != null ? imageUrl.getAudioUrl() : "");
                     mediaItem.setType(imageUrl.getType());
                     mediaItem.setPost(post);
                     return mediaItem;
