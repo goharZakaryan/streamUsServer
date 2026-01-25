@@ -230,11 +230,12 @@ public class PostServiceImpl implements PostService {
 
         if (request.getItemId() == 0) {
             // Fresh load or refresh
-            items = postRepository.findAllByOrderByCreatedAtDesc(request.getAccountId(), pageable);
+            items = postRepository.findPostsWithoutMusic(request.getAccountId(),ImageType.MUSIC, pageable);
         } else {
             // Load more (pagination)
-            items = postRepository.findByIdLessThanOrderByCreatedAtDesc(
+            items = postRepository.findPostsWithoutMusic(
                     Long.valueOf(request.getItemId()),
+                    ImageType.MUSIC,
                     pageable
             );
         }

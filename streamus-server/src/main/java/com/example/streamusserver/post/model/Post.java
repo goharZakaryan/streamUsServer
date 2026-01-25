@@ -19,7 +19,8 @@ public class Post {
     @ManyToOne
     private UserProfile account;
     private Long fromUserId;
-
+    @OneToMany()
+    private List<MediaItem> mediaItem;
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Like> likes = new HashSet<>();
@@ -37,8 +38,7 @@ public class Post {
     private double postLng;
     private int feeling;
     private String fromUserPhotoUrl;
-    @OneToMany()
-    private List<MediaItem> mediaItem;
+
     private String videoImgUrl;
     private String videoUrl;
     private LocalDate createdAt;
