@@ -23,6 +23,9 @@ public class MediaItemMapper {
             dto.setUrl(mediaItem.getVideoUrl());
             dto.setFileName(mediaItem.getSelectedVideoFileName());
             dto.setThumbnailUrl(mediaItem.getVideoUrl()); // Set thumbnail if available
+        } else if (mediaItem.getType().name().equals(ImageType.MUSIC.name())) { // Video
+            dto.setUrl(mediaItem.getAudioUrl());
+            dto.setFileName(mediaItem.getSelectedAudioFileName());
         }
 
         return dto;

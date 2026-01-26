@@ -268,7 +268,8 @@ public class UserProfileServiceImpl implements UserProfileService {
         if (mediaType.equalsIgnoreCase(ImageType.PHOTO.name())) {
             mediaItems = mediaItemRepository.findByPostAccountIdAndType(userId, ImageType.PHOTO);
 
-        } else {
+        } else if (mediaType.equalsIgnoreCase(ImageType.MUSIC.name())){
+            mediaItems = mediaItemRepository.findByPostAccountIdAndType(userId, ImageType.MUSIC);
 
         }
         // Filter by media type (e.g., 1 for images, 2 for videos)

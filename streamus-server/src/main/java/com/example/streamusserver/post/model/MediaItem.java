@@ -11,6 +11,7 @@ public class MediaItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
     private String selectedImageFileName;
+    private String selectedAudioFileName;
     private String imageUrl;
     private String audioUrl;
     private String selectedVideoFileName;
