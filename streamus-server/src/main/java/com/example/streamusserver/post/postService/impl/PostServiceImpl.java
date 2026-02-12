@@ -8,6 +8,7 @@ import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.request.PostRequestDto;
 import com.example.streamusserver.post.dto.request.StreamRequestDto;
 import com.example.streamusserver.post.dto.response.PostResponseDto;
+import com.example.streamusserver.post.dto.response.SongResponseDto;
 import com.example.streamusserver.post.dto.response.StreamResponseDto;
 import com.example.streamusserver.post.dto.response.UploadResponseDto;
 import com.example.streamusserver.post.mapper.PostMap;
