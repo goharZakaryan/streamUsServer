@@ -9,10 +9,19 @@ import com.example.streamusserver.post.dto.response.UploadResponseDto;
 import com.example.streamusserver.post.model.Post;
 import com.example.streamusserver.post.postService.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/v1")
 public class PostController {
     private final PostService postService;
+    @Value("${file.path}")
+    private String uploadDir;
 
     @PostMapping("/post/delete")
     public ResponseEntity<Void> hidePost(@RequestBody HideItemRequestDto hideItemRequestDto) {
@@ -102,4 +113,46 @@ public class PostController {
 
     }
 
+    @GetMapping("/media/audio/{fileName:.+}")  // ⭐ Հեռացված /public/
+    public ResponseEntity<Resource> streamAudio(
+            @PathVariable String fileName,
+            @RequestHeader(value = "Authorization", required = false) String authHeader)
+            throws IOException {
+
+        // ⭐ fileName-ը արդեն decoded է Spring-ի կողմից
+        File file = new File(uploadDir, fileName);
+
+        if (!file.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Resource resource = new FileSystemResource(file);
+
+        // Որոշիր content type
+        String contentType = "audio/mpeg";
+        String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+        switch (fileExtension) {
+            case "mp3":
+                contentType = "audio/mpeg";
+                break;
+            case "mp4":
+            case "m4a":
+                contentType = "audio/mp4";
+                break;
+            case "wav":
+                contentType = "audio/wav";
+                break;
+            case "ogg":
+                contentType = "audio/ogg";
+                break;
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, contentType)
+                .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.length()))
+                .header(HttpHeaders.ACCEPT_RANGES, "bytes")
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=31536000")
+                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+                .body(resource);
+    }
 }
