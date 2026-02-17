@@ -1,5 +1,6 @@
 package com.example.streamusserver.post.postService.impl;
 
+import com.example.streamusserver.dto.MediaItemDTO;
 import com.example.streamusserver.exception.PostNotFoundException;
 import com.example.streamusserver.exception.UserNotFoundException;
 import com.example.streamusserver.model.UserProfile;
@@ -11,6 +12,7 @@ import com.example.streamusserver.post.dto.response.PostResponseDto;
 import com.example.streamusserver.post.dto.response.SongResponseDto;
 import com.example.streamusserver.post.dto.response.StreamResponseDto;
 import com.example.streamusserver.post.dto.response.UploadResponseDto;
+import com.example.streamusserver.post.mapper.MediaItemMapper;
 import com.example.streamusserver.post.mapper.PostMap;
 import com.example.streamusserver.post.model.MediaItem;
 import com.example.streamusserver.post.model.Post;
@@ -265,6 +267,11 @@ public class PostServiceImpl implements PostService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<MediaItemDTO> getAllSongs() {
+        return MediaItemMapper.convertToMediaItemDTOList(mediaItemRepository.findByType(ImageType.MUSIC));
     }
 
     public Post updateItem(Post item) {

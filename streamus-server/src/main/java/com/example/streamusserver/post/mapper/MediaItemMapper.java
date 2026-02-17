@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 public class MediaItemMapper {
-    public MediaItemDTO convertToMediaItemDTO(MediaItem mediaItem) {
+    public  MediaItemDTO convertToMediaItemDTO(MediaItem mediaItem) {
         MediaItemDTO dto = new MediaItemDTO();
         dto.setId(mediaItem.getId());
         dto.setType(mediaItem.getType().name());
@@ -42,6 +42,19 @@ public class MediaItemMapper {
             dto.setThumbnailUrl(mediaItem.getVideoUrl());
 
             dto.setType(mediaItem.getType().name().equalsIgnoreCase(ImageType.PHOTO.name()) ? 1 : 0);
+            mediaItemResponseDtos.add(dto);
+        }
+        return mediaItemResponseDtos;
+    }
+    public static  List<MediaItemDTO> convertToMediaItemDTOList(List<MediaItem> mediaItems) {
+        List<MediaItemDTO> mediaItemResponseDtos = new ArrayList<>();
+        for (MediaItem mediaItem : mediaItems) {
+            MediaItemDTO dto = new MediaItemDTO();
+            dto.setId(mediaItem.getId());
+
+            dto.setFileName(mediaItem.getSelectedImageFileName());
+
+            dto.setType("music");
             mediaItemResponseDtos.add(dto);
         }
         return mediaItemResponseDtos;

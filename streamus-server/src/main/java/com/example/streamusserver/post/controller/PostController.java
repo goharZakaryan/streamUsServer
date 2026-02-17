@@ -1,5 +1,6 @@
 package com.example.streamusserver.post.controller;
 
+import com.example.streamusserver.dto.MediaItemDTO;
 import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.request.PostRequestDto;
 import com.example.streamusserver.post.dto.request.StreamRequestDto;
@@ -22,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -154,5 +156,11 @@ public class PostController {
                 .header(HttpHeaders.CACHE_CONTROL, "public, max-age=31536000")
                 .header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
                 .body(resource);
+    }
+
+    @GetMapping("/media/songs")  // ⭐ Հեռացված /public/
+    public ResponseEntity<List<MediaItemDTO>> getAllSongs(){
+
+        return ResponseEntity.ok().body(postService.getAllSongs());
     }
 }
