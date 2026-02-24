@@ -52,8 +52,8 @@ public class MediaItemMapper {
             MediaItemDTO dto = new MediaItemDTO();
             dto.setId(mediaItem.getId());
 
-            dto.setFileName(mediaItem.getSelectedImageFileName());
-
+            dto.setFileName(mediaItem.getSelectedAudioFileName());
+dto.setUrl(mediaItem.getAudioUrl());
             dto.setType("music");
             mediaItemResponseDtos.add(dto);
         }
