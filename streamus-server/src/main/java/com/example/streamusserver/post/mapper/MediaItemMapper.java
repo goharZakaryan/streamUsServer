@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 public class MediaItemMapper {
-    public  MediaItemDTO convertToMediaItemDTO(MediaItem mediaItem) {
+    public MediaItemDTO convertToMediaItemDTO(MediaItem mediaItem) {
         MediaItemDTO dto = new MediaItemDTO();
         dto.setId(mediaItem.getId());
         dto.setType(mediaItem.getType().name());
@@ -46,14 +46,16 @@ public class MediaItemMapper {
         }
         return mediaItemResponseDtos;
     }
-    public static  List<MediaItemDTO> convertToMediaItemDTOList(List<MediaItem> mediaItems) {
+
+    public static List<MediaItemDTO> convertToMediaItemDTOList(List<MediaItem> mediaItems) {
         List<MediaItemDTO> mediaItemResponseDtos = new ArrayList<>();
         for (MediaItem mediaItem : mediaItems) {
             MediaItemDTO dto = new MediaItemDTO();
             dto.setId(mediaItem.getId());
 
             dto.setFileName(mediaItem.getSelectedAudioFileName());
-dto.setUrl(mediaItem.getAudioUrl());
+            dto.setUrl(mediaItem.getAudioUrl());
+            dto.setSongDuration(mediaItem.getDuration());
             dto.setType("music");
             mediaItemResponseDtos.add(dto);
         }

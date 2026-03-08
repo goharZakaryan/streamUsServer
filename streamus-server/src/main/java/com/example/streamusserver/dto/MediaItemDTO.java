@@ -6,6 +6,15 @@ public class MediaItemDTO {
     private String url;
     private String fileName;
     private String thumbnailUrl;
+    private String songDuration;
+
+    public String getSongDuration() {
+        return songDuration;
+    }
+
+    public void setSongDuration(String songDuration) {
+        this.songDuration = songDuration;
+    }
 
     public Long getId() {
         return id;

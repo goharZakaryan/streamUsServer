@@ -20,6 +20,7 @@ public class MediaItem {
     private ImageType type;
     @ManyToOne
     private Post post;
+    private String duration;
 
     public MediaItem() {
     }
