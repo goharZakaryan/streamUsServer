@@ -1,11 +1,11 @@
 package com.example.streamusserver.model;
 
+import com.example.streamusserver.post.model.Audio;
+import com.example.streamusserver.post.model.UserAudio;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,7 +45,11 @@ public class UserProfile {
             inverseJoinColumns = @JoinColumn(name = "friend_id")
     )
     private Set<UserProfile> friends = new HashSet<>();
+    @OneToMany(mappedBy = "userProfile")
+    private List<Audio> uploadedAudios;
 
+    @OneToMany(mappedBy = "user")
+    private List<UserAudio> userAudios;
 
     public String getUsername() {
         return username;
@@ -245,5 +249,21 @@ public class UserProfile {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public List<Audio> getUploadedAudios() {
+        return uploadedAudios;
+    }
+
+    public void setUploadedAudios(List<Audio> uploadedAudios) {
+        this.uploadedAudios = uploadedAudios;
+    }
+
+    public List<UserAudio> getUserAudios() {
+        return userAudios;
+    }
+
+    public void setUserAudios(List<UserAudio> userAudios) {
+        this.userAudios = userAudios;
     }
 }

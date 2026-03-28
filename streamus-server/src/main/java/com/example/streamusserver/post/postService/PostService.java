@@ -20,7 +20,7 @@ public interface PostService {
     boolean updateRepost(Long itemId, String userId);
 List<MediaItemDTO> getAllSongs();
     StreamResponseDto getItems(StreamRequestDto request);
-
+    PostResponseDto saveAudioToDatabase(PostRequestDto postRequestDto);
     PostResponseDto savePostToDatabase(PostRequestDto postRequest);
 
     PostResponseDto editPost(PostRequestDto postRequest);

@@ -9,17 +9,21 @@ import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.request.PostRequestDto;
 import com.example.streamusserver.post.dto.request.StreamRequestDto;
 import com.example.streamusserver.post.dto.response.PostResponseDto;
-import com.example.streamusserver.post.dto.response.SongResponseDto;
 import com.example.streamusserver.post.dto.response.StreamResponseDto;
 import com.example.streamusserver.post.dto.response.UploadResponseDto;
 import com.example.streamusserver.post.mapper.MediaItemMapper;
 import com.example.streamusserver.post.mapper.PostMap;
+import com.example.streamusserver.post.model.Audio;
+import com.example.streamusserver.post.model.Media;
 import com.example.streamusserver.post.model.MediaItem;
 import com.example.streamusserver.post.model.Post;
 import com.example.streamusserver.post.model.enums.ImageType;
+import com.example.streamusserver.post.model.enums.MediaType;
 import com.example.streamusserver.post.postService.CommentService;
 import com.example.streamusserver.post.postService.PostService;
+import com.example.streamusserver.post.repository.AudioRepository;
 import com.example.streamusserver.post.repository.MediaItemRepository;
+import com.example.streamusserver.post.repository.MediaRepository;
 import com.example.streamusserver.post.repository.PostRepository;
 import com.example.streamusserver.security.JwtUtil;
 import com.example.streamusserver.service.UserProfileService;
@@ -54,7 +58,10 @@ public class PostServiceImpl implements PostService {
 
     private UserProfileService userProfileService;
     private final PostRepository postRepository;
-    private final MediaItemRepository mediaItemRepository;
+    private final MediaRepository mediaRepository;
+    @Autowired
+    private AudioRepository audioRepository;
+    private MediaItemRepository mediaItemRepository;
     @Autowired
     private NotificationService notificationService;
     private final PostMap postMapper;
@@ -105,7 +112,7 @@ public class PostServiceImpl implements PostService {
 
                 } else {
                     commentService.deleteAll(commentService.getCommentsByPostId(post.getId()));
-                   notificationService.deleteAllByPost(post);
+                    notificationService.deleteAllByPost(post);
                     postRepository.delete(post);
                 }
                 mediaItemRepository.delete(mediaItem); // Delete from DB
@@ -139,9 +146,6 @@ public class PostServiceImpl implements PostService {
                     MediaItem mediaItem = new MediaItem();
                     mediaItem.setImageUrl(imageUrl.getImageUrl());
                     mediaItem.setVideoUrl(imageUrl.getVideoUrl() != null ? imageUrl.getVideoUrl() : "");
-                    mediaItem.setAudioUrl(imageUrl.getAudioUrl() != null ? imageUrl.getAudioUrl() : "");
-                    mediaItem.setDuration(imageUrl.getDuration() != null ? imageUrl.getDuration() : "");
-                    mediaItem.setSelectedAudioFileName(imageUrl.getSelectedAudioFileName() != null ? imageUrl.getSelectedAudioFileName() : "");
                     mediaItem.setType(imageUrl.getType());
                     mediaItem.setPost(post);
                     return mediaItem;
@@ -154,6 +158,70 @@ public class PostServiceImpl implements PostService {
         return response;
     }
 
+    @Transactional
+    public PostResponseDto saveAudioToDatabase(PostRequestDto postRequest) {
+
+        PostResponseDto response = new PostResponseDto();
+
+        // ✅ Token validation
+        if (!jwtUtil.isTokenValid(postRequest.getAccessToken())) {
+            response.setError(true);
+            response.setMessage("Invalid access token");
+            return response;
+        }
+
+        // ✅ User check
+        UserProfile user = userProfileService.findById(postRequest.getAccountId())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        // ❗ Validation media
+        if (postRequest.getMediaItems() == null || postRequest.getMediaItems().isEmpty()) {
+            response.setError(true);
+            response.setMessage("Audio list is empty");
+            return response;
+        }
+
+        // ✅ Create Post
+        Post post = new Post();
+        post.setAccount(user);
+        post.setPostText(postRequest.getPostText());
+        post.setCreatedAt(LocalDate.now());
+
+        // ✅ Create Media
+        Media media = new Media();
+        media.setType(MediaType.AUDIO);
+
+        // ✅ Create Audio list + կապ Media-ի հետ
+        List<Audio> audios = postRequest.getMediaItems().stream()
+                .map(item -> {
+                    Audio audio = new Audio();
+                    audio.setAudioUrl(item.getAudioUrl());
+                    audio.setDuration(item.getDuration());
+                    audio.setSelectedAudioFileName(item.getSelectedAudioFileName());
+                    audio.setUserProfile(user);
+                    audio.setMedia(media); // 🔥 ամենակարևորը
+                    return audio;
+                })
+                .collect(Collectors.toList());
+
+        // ✅ Կապ Media ↔ Audio
+        media.setAudios(audios);
+
+        // ✅ Save (cascade եթե ունես՝ կպահի նաև audios)
+        Media savedMedia = mediaRepository.save(media);
+
+        // ✅ Attach to post
+        post.setMedia(savedMedia);
+
+        Post savedPost = postRepository.save(post);
+
+        // ✅ Response
+        response.setError(false);
+        response.setMessage("Audio uploaded successfully");
+        response.setPostId(savedPost.getId());
+
+        return response;
+    }
 
     @Override
     public UploadResponseDto uploadedFile(MultipartFile file, Long accountId, String accessToken) {
@@ -235,7 +303,7 @@ public class PostServiceImpl implements PostService {
 
         if (request.getItemId() == 0) {
             // Fresh load or refresh
-            items = postRepository.findPostsWithoutMusic(request.getAccountId(),ImageType.MUSIC, pageable);
+            items = postRepository.findPostsWithoutMusic(request.getAccountId(), ImageType.MUSIC, pageable);
         } else {
             // Load more (pagination)
             items = postRepository.findPostsWithoutMusic(

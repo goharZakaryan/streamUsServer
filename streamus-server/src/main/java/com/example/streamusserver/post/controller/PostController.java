@@ -21,8 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -51,6 +49,13 @@ public class PostController {
     public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto postRequest) {
         System.out.println("savepost");
         PostResponseDto response = postService.savePostToDatabase(postRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/post/audio")
+    public ResponseEntity<PostResponseDto> createAudioPost(@RequestBody PostRequestDto postRequest) {
+        System.out.println("savepost");
+        PostResponseDto response = postService.saveAudioToDatabase(postRequest);
         return ResponseEntity.ok(response);
     }
 
@@ -99,7 +104,7 @@ public class PostController {
     public ResponseEntity<UploadResponseDto> uploadMusic(
             @RequestParam("uploaded_music") MultipartFile file,
             @RequestParam("accountId") String accountId,
-            @RequestParam("accessToken") String accessToken)  {
+            @RequestParam("accessToken") String accessToken) {
         System.out.println("music");
         return ResponseEntity.ok(postService.uploadedFile(file, Long.parseLong(accountId), accessToken));
 
@@ -159,7 +164,7 @@ public class PostController {
     }
 
     @GetMapping("/media/songs")  // ⭐ Հեռացված /public/
-    public ResponseEntity<List<MediaItemDTO>> getAllSongs(){
+    public ResponseEntity<List<MediaItemDTO>> getAllSongs() {
 
         return ResponseEntity.ok().body(postService.getAllSongs());
     }

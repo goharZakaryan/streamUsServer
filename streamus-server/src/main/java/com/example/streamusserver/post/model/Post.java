@@ -37,6 +37,8 @@ public class Post {
     private double postLat;
     private double postLng;
     private int feeling;
+    @OneToOne
+    private Media media;
     private String fromUserPhotoUrl;
 
     private String videoImgUrl;
@@ -248,5 +250,13 @@ public class Post {
 
     public void setFromUserId(Long fromUserId) {
         this.fromUserId = fromUserId;
+    }
+
+    public Media getMedia() {
+        return media;
+    }
+
+    public void setMedia(Media media) {
+        this.media = media;
     }
 }
