@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public interface UserAudioRepository extends JpaRepository<UserAudio, Long> {
     Optional<UserAudio> findByUserAndAudio(UserProfile userProfile, Audio audio);
+
     List<UserAudio> findByUserAndFavoriteTrue(UserProfile user);
 
+    void deleteUserAudioByAudio(Audio audio);
 }

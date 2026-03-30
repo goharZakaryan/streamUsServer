@@ -61,7 +61,7 @@ public class PostServiceImpl implements PostService {
     private final MediaRepository mediaRepository;
     @Autowired
     private AudioRepository audioRepository;
-    private MediaItemRepository mediaItemRepository;
+    private final MediaItemRepository mediaItemRepository;
     @Autowired
     private NotificationService notificationService;
     private final PostMap postMapper;

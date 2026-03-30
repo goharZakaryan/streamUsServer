@@ -37,7 +37,21 @@ public class AudioServiceImpl implements AudioService {
     public List<AudioItemResponseDto> getAudios() {
         return audioItemMapper.toDtoList(audioRepository.findAll());
     }
+    @Transactional
+    public void deleteAudio(Long userId, Long audioId) {
 
+        UserProfile user = userProfileService.findById(userId).orElseThrow();
+        Audio audio = audioRepository.findById(audioId).orElseThrow();
+
+        if (audio.getUserProfile() != null && audio.getUserProfile().getId().equals(userId)) {
+
+            userAudioRepository.deleteUserAudioByAudio(audio);
+
+            return;
+        }
+        userAudioRepository.findByUserAndAudio(user, audio)
+                .ifPresent(userAudioRepository::delete);
+    }
     @Transactional
     public LikeResponse likeAudio(Long userId, Long audioId) {
         UserProfile user = userProfileService.findById(userId).orElseThrow();

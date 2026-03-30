@@ -11,4 +11,5 @@ public interface AudioService {
     List<AudioItemResponseDto> getAudios();
 
     LikeResponse likeAudio(Long userId, Long audioId);
+    void deleteAudio(Long userId, Long audioId);
 }

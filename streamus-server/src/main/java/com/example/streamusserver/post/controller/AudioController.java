@@ -44,4 +44,12 @@ public class AudioController {
             @RequestParam Long audioId) {
         return ResponseEntity.ok(audioService.likeAudio(userId, audioId));
     }
+    @DeleteMapping("/users/{userId}/audio/{audioId}")
+    public ResponseEntity<?> deleteAudio(
+            @PathVariable(name = "userId") Long userId,
+            @PathVariable (name = "audioId")Long audioId
+    ) {
+        audioService.deleteAudio(userId, audioId);
+        return ResponseEntity.ok().build();
+    }
 }
