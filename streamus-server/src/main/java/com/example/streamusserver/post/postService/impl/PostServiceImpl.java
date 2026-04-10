@@ -60,7 +60,6 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final MediaRepository mediaRepository;
     @Autowired
-    private AudioRepository audioRepository;
     private final MediaItemRepository mediaItemRepository;
     @Autowired
     private NotificationService notificationService;
@@ -303,12 +302,12 @@ public class PostServiceImpl implements PostService {
 
         if (request.getItemId() == 0) {
             // Fresh load or refresh
-            items = postRepository.findPostsWithoutMusic(request.getAccountId(), ImageType.MUSIC, pageable);
+            items = postRepository.findPostsWithoutMusic(request.getAccountId(), MediaType.AUDIO, pageable);
         } else {
             // Load more (pagination)
             items = postRepository.findPostsWithoutMusic(
                     Long.valueOf(request.getItemId()),
-                    ImageType.MUSIC,
+                    MediaType.AUDIO,
                     pageable
             );
         }
