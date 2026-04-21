@@ -2,6 +2,7 @@ package com.example.streamusserver.market.controller;
 
 import com.example.streamusserver.market.dto.request.AdvertisementRequestDto;
 import com.example.streamusserver.market.dto.response.AdvertisementResponseDto;
+import com.example.streamusserver.market.dto.response.AdvertisementSearchResponseDto;
 import com.example.streamusserver.market.service.AdvertisementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,5 +29,20 @@ public class AdvertisementController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
+    }
+    @PostMapping("/ads/search")
+    public ResponseEntity<AdvertisementSearchResponseDto> search(
+            @RequestParam(required = false) String query, @RequestParam(defaultValue = "0") int itemId) {
+
+        AdvertisementSearchResponseDto response =
+                advertisementService.search(query,itemId);
+
+        return ResponseEntity.ok(response);
+    }
+    @PostMapping("/ads/preload")
+    public AdvertisementSearchResponseDto preload(
+            @RequestParam(defaultValue = "0") long itemId) {
+
+        return advertisementService.preload(itemId);
     }
 }
