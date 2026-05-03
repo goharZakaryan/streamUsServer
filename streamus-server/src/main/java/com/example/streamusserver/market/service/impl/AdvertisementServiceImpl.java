@@ -41,7 +41,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 //        }
 
 //        user.setBalance(user.getBalance() - price);
-        String fileName = fileStorageService.uploadFile(image, userId);
+        String fileName ="public/"+ fileStorageService.uploadFile(image, userId);
 
         Advertisement ad = mapper.toEntity(req);
         ad.setOwner(user);
