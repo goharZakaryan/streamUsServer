@@ -1,5 +1,7 @@
 package com.example.streamusserver.market.dto.response;
 
+import java.time.LocalDateTime;
+
 public class AdvertisementResponseDto {
     private Long id;
     private String title;
@@ -8,6 +10,7 @@ public class AdvertisementResponseDto {
     private String imageUrl;
 //    private AdType type;
     private Long ownerId;
+    private LocalDateTime createdAt;
 
     public Long getOwnerId() {
         return ownerId;
@@ -55,5 +58,13 @@ public class AdvertisementResponseDto {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
