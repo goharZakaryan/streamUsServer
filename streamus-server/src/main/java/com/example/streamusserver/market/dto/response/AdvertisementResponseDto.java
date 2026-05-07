@@ -3,6 +3,7 @@ package com.example.streamusserver.market.dto.response;
 import java.time.LocalDateTime;
 
 public class AdvertisementResponseDto {
+
     private Long id;
     private String title;
     private String description;
