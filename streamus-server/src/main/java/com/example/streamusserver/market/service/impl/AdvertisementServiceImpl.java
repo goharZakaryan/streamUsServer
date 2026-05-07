@@ -108,6 +108,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     public AdvertisementResponseDto getAdsObj(long itemId) {
-        return mapper.toDto(repository.findById(itemId).get());
+        AdvertisementResponseDto dto = mapper.toDto(repository.findById(itemId).get());
+        System.out.println(dto.getCreatedAt());
+
+        return dto;
     }
 }
