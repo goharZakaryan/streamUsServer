@@ -5,6 +5,7 @@ public class CommentRequestDto {
     private String accessToken;
 
     private Long postId;
+    private Long parentCommentId;
     private int itemType;
     private String commentText;
 
@@ -56,5 +57,13 @@ public class CommentRequestDto {
 
     public void setReplyToUserId(Long replyToUserId) {
         this.replyToUserId = replyToUserId;
+    }
+
+    public Long getParentCommentId() {
+        return parentCommentId;
+    }
+
+    public void setParentCommentId(Long parentCommentId) {
+        this.parentCommentId = parentCommentId;
     }
 }

@@ -3,10 +3,13 @@ package com.example.streamusserver.post.model;
 // Comment Entity
 
 import com.example.streamusserver.model.UserProfile;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Comment {
@@ -34,6 +37,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
+    @JsonBackReference
     private Comment parentComment;
 
     @Column(name = "likes_count")
@@ -42,7 +46,10 @@ public class Comment {
     @Column(name = "is_edited")
     private boolean isEdited;
 
-    // For mentions and hashtags
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Comment> replies;
+
     @Column(name = "mentioned_users")
     private String mentionedUsers;
 
@@ -147,6 +154,14 @@ public class Comment {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
         this.isEdited = true;
+    }
+
+    public List<Comment> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Comment> replies) {
+        this.replies = replies;
     }
 }
 

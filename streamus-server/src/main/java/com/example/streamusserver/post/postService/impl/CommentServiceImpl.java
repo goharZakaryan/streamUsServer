@@ -41,30 +41,55 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     public CommentResponseDto createComment(CommentRequestDto commentDTO) {
+
         Post post = postRepository.findById(commentDTO.getPostId())
-                .orElseThrow(() -> new PostNotFoundException(commentDTO.getPostId()));
+                .orElseThrow(() ->
+                        new PostNotFoundException(commentDTO.getPostId()));
 
         UserProfile user = userProfileService.findById(commentDTO.getAccountId())
-                .orElseThrow(() -> new UserNotFoundException("user not found"));
+                .orElseThrow(() ->
+                        new UserNotFoundException("user not found"));
 
         Comment comment = new Comment();
+
         comment.setPost(post);
         comment.setUser(user);
         comment.setContent(commentDTO.getCommentText());
-        comment.setUser(user);
-//        if (commentDTO.getParentCommentId() != null) {
-//            Comment parentComment = commentRepository.findById(commentDTO.getParentCommentId())
-//                    .orElseThrow(() -> new CommentNotFoundException(commentDTO.getParentCommentId()));
-//            comment.setParentComment(parentComment);
-//        }
-        int commentsCount = post.getComments().size();
-        post.setCommentsCount(++commentsCount);
-        postRepository.save(post);
-        Comment savedComment = commentRepository.save(comment);
-        if (!user.equals(post.getAccount().getId())) {
-            notificationService.createCommentNotification(user, post, commentDTO.getCommentText());
 
+        // Reply logic
+        if (commentDTO.getParentCommentId() != null) {
+
+            Comment parentComment = commentRepository
+                    .findById(commentDTO.getParentCommentId())
+                    .get();
+
+            // Optional: allow only 1 level replies like Instagram
+            if (parentComment.getParentComment() != null) {
+                throw new RuntimeException(
+                        "Nested replies are not allowed"
+                );
+            }
+
+            comment.setParentComment(parentComment);
         }
+
+        // increase comments count
+        post.setCommentsCount(post.getCommentsCount() + 1);
+
+        postRepository.save(post);
+
+        Comment savedComment = commentRepository.save(comment);
+
+        // notification
+        if (!user.getId().equals(post.getAccount().getId())) {
+
+            notificationService.createCommentNotification(
+                    user,
+                    post,
+                    commentDTO.getCommentText()
+            );
+        }
+
         return mapToDTO(savedComment);
     }
 
