@@ -2,6 +2,7 @@ package com.example.streamusserver.post.controller;
 
 
 import com.example.streamusserver.post.dto.request.CommentRequestDto;
+import com.example.streamusserver.post.dto.response.CommentRepliesResponse;
 import com.example.streamusserver.post.dto.response.CommentResponseDto;
 import com.example.streamusserver.post.postService.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +43,18 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
-//    @GetMapping("/{commentId}/replies")
-//    public ResponseEntity<List<CommentDTO>> getRepliesForComment(@PathVariable Long commentId) {
-//        List<CommentDTO> replies = commentService.getRepliesForComment(commentId);
-//        return ResponseEntity.ok(replies);
-//    }
+    @PostMapping("/{commentId}/replies")
+    public ResponseEntity<CommentRepliesResponse> getReplies(
+            @PathVariable Long commentId,
+            @RequestParam Long accountId,
+            @RequestParam String accessToken
+    ) {
+
+        CommentRepliesResponse response =
+                commentService.getRepliesForComment(commentId, accountId, accessToken);
+
+        return ResponseEntity.ok(response);
+    }
 //
 //    @PutMapping("/{commentId}")
 //    public ResponseEntity<?> updateComment(

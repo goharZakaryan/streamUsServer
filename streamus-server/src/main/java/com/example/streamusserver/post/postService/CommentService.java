@@ -1,6 +1,7 @@
 package com.example.streamusserver.post.postService;
 
 import com.example.streamusserver.post.dto.request.CommentRequestDto;
+import com.example.streamusserver.post.dto.response.CommentRepliesResponse;
 import com.example.streamusserver.post.dto.response.CommentResponseDto;
 import com.example.streamusserver.post.model.Comment;
 import org.springframework.data.domain.Page;
@@ -14,4 +15,6 @@ public interface CommentService {
     List<CommentResponseDto> getCommentsByPostId(CommentRequestDto commentRequestDto);
 
     void deleteAll(List<Comment> commentsByPostId);
+
+   CommentRepliesResponse getRepliesForComment(Long commentId, Long accountId, String accessToken);
 }

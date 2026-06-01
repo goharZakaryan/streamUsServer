@@ -5,6 +5,7 @@ import com.example.streamusserver.exception.UserNotFoundException;
 import com.example.streamusserver.model.UserProfile;
 import com.example.streamusserver.notification.service.NotificationService;
 import com.example.streamusserver.post.dto.request.CommentRequestDto;
+import com.example.streamusserver.post.dto.response.CommentRepliesResponse;
 import com.example.streamusserver.post.dto.response.CommentResponseDto;
 import com.example.streamusserver.post.model.Comment;
 import com.example.streamusserver.post.model.Post;
@@ -119,9 +120,23 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommentResponseDto> getRepliesForComment(Long commentId) {
-        List<Comment> replies = commentRepository.findByParentCommentIdOrderByCreatedAtAsc(commentId);
-        return replies.stream().map(this::mapToDTO).collect(Collectors.toList());
+    public CommentRepliesResponse getRepliesForComment(Long commentId, Long accountId, String accessToken) {
+
+        CommentRepliesResponse response = new CommentRepliesResponse();
+
+            // optional auth check (եթե ունես token system)
+            if (accountId == null || accessToken == null) {
+                response.setError(true);
+                return response;
+            }
+
+            List<Comment> replies =
+                    commentRepository.findByParentCommentIdOrderByCreatedAtAsc(commentId);
+
+            response.setError(false);
+            response.setReplies(replies);
+
+            return response;
     }
 
 //    @Transactional
