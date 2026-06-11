@@ -43,7 +43,7 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
-    @PostMapping("/{commentId}/replies")
+    @GetMapping("/{commentId}/replies")
     public ResponseEntity<CommentRepliesResponse> getReplies(
             @PathVariable Long commentId,
             @RequestParam Long accountId,

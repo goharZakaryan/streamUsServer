@@ -108,7 +108,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getCommentsByPostId(CommentRequestDto commentRequestDto) {
-        List<Comment> comments = commentRepository.findByPostId(commentRequestDto.getPostId());
+        List<Comment> comments = commentRepository.findByPostIdAndParentCommentIsNullOrderByCreatedAtDesc(commentRequestDto.getPostId());
         List<CommentResponseDto> commentResponseDtos = comments.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
 
         return commentResponseDtos;
@@ -132,9 +132,10 @@ public class CommentServiceImpl implements CommentService {
 
             List<Comment> replies =
                     commentRepository.findByParentCommentIdOrderByCreatedAtAsc(commentId);
+        List<CommentResponseDto> commentResponseDtos = replies.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
 
             response.setError(false);
-            response.setReplies(replies);
+            response.setReplies(commentResponseDtos);
 
             return response;
     }
@@ -175,7 +176,7 @@ public class CommentServiceImpl implements CommentService {
     private CommentResponseDto mapToDTO(Comment comment) {
         CommentResponseDto dto = new CommentResponseDto();
         dto.setId(comment.getId());
-        dto.setPostId(comment.getPost().getId());
+        dto.setItemId(comment.getPost().getId());
         dto.setUserId(comment.getUser().getId());
         dto.setUsername(comment.getUser().getUsername());
         dto.setUserAvatar(comment.getUser().getPhotoUrl());

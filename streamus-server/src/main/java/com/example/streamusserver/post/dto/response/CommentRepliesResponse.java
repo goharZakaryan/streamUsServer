@@ -9,13 +9,13 @@ public class CommentRepliesResponse {
 
     private boolean error;
 
-    private List<Comment> replies;
+    private List<CommentResponseDto> replies;
 
     public boolean isError() {
         return error;
     }
 
-    public List<Comment> getReplies() {
+    public List<CommentResponseDto> getReplies() {
         return replies;
     }
 
@@ -23,7 +23,7 @@ public class CommentRepliesResponse {
         this.error = error;
     }
 
-    public void setReplies(List<Comment> replies) {
+    public void setReplies(List<CommentResponseDto> replies) {
         this.replies = replies;
     }
 }
