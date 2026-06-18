@@ -152,6 +152,11 @@ public class CommentServiceImpl implements CommentService {
         return response;
     }
 
+    @Override
+    public Comment findById(Long commentId) {
+        return commentRepository.findById(commentId).get();
+    }
+
 //    @Transactional
 //    public CommentResponseDto updateComment(Long commentId, Long userId, String content) {
 //        Comment comment = commentRepository.findById(commentId)

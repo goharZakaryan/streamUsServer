@@ -9,7 +9,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Comment {
@@ -57,10 +59,20 @@ public class Comment {
 
     @Column(name = "hashtags")
     private String hashtags;
-
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Like> likes = new HashSet<>();
     // Default constructor
     public Comment() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public Set<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<Like> likes) {
+        this.likes = likes;
     }
 
     // Getters and setters

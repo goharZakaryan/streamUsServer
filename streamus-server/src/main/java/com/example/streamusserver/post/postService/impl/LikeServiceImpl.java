@@ -4,8 +4,10 @@ import com.example.streamusserver.model.Story;
 import com.example.streamusserver.model.UserProfile;
 import com.example.streamusserver.notification.service.NotificationService;
 import com.example.streamusserver.post.dto.response.LikeResponse;
+import com.example.streamusserver.post.model.Comment;
 import com.example.streamusserver.post.model.Like;
 import com.example.streamusserver.post.model.Post;
+import com.example.streamusserver.post.postService.CommentService;
 import com.example.streamusserver.post.postService.LikeService;
 import com.example.streamusserver.post.repository.LikeRepository;
 import com.example.streamusserver.post.repository.PostRepository;
@@ -26,6 +28,8 @@ public class LikeServiceImpl implements LikeService {
 
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     private UserProfileService userProfileService;
@@ -84,6 +88,36 @@ public class LikeServiceImpl implements LikeService {
             return new LikeResponse(true, ++likeCount); // Post liked
         }
     }
+    @Transactional
+    public LikeResponse likeComment(Long userId, Long commentId) {
+        boolean alreadyLiked = likeRepository.existsByUserIdAndComment_Id(userId, commentId);
+        int likeCount = getLikeCountByCommentId(commentId);
+        if (alreadyLiked) {
+            likeRepository.deleteByUserIdAndCommentId(userId, commentId);
+            return new LikeResponse(false, --likeCount); // Post unliked
+        } else {
+            UserProfile user = userProfileService.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            Comment comment = commentService.findById(commentId);
+
+            Like like = new Like();
+            like.setUser(user);
+            like.setComment(comment);
+            like.setCreatedAt(LocalDateTime.now());
+
+            likeRepository.save(like);
+//            if (!userId.equals(story.getUserId())){
+//                notificationService.createLikeNotification(userId,storyId,user,story);
+//
+//            }
+            return new LikeResponse(true, ++likeCount); // Post liked
+        }
+    }
+
+    private int getLikeCountByCommentId(Long commentId) {
+        return likeRepository.countByComment_Id(commentId);
+
+    }
 
     public LikeResponse getLike(Long userId, Long postId) {
         boolean alreadyLiked = likeRepository.existsByUserIdAndPostId(userId, postId);
@@ -94,6 +128,13 @@ public class LikeServiceImpl implements LikeService {
 
     public boolean checkIfUserLikedPost(Long userId, Long postId) {
         return likeRepository.existsByUserIdAndPostId(userId, postId);
+    }
+
+    @Override
+    public LikeResponse getCommentLike(Long userId, Long commentId) {
+        boolean alreadyLiked = likeRepository.existsByUserIdAndComment_Id(userId, commentId);
+
+        return new LikeResponse(alreadyLiked, getLikeCountByCommentId(commentId));
     }
 
     public LikeResponse checkIfUserLikedStory(Long storyId, Long userId) {

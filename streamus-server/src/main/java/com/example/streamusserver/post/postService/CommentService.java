@@ -17,4 +17,6 @@ public interface CommentService {
     void deleteAll(List<Comment> commentsByPostId);
 
    CommentRepliesResponse getRepliesForComment(Long commentId, Long accountId, String accessToken);
+
+    Comment findById(Long commentId);
 }

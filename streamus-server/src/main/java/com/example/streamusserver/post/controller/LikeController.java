@@ -28,12 +28,27 @@ public class LikeController {
         return ResponseEntity.ok(likeService.likeStory(userId, storyId));
     }
 
+    @PostMapping("/comment")
+    public ResponseEntity<LikeResponse> likeComment(
+            @RequestParam Long userId,
+            @RequestParam Long commentId) {
+
+        return ResponseEntity.ok(likeService.likeComment(userId, commentId));
+    }
+
     @GetMapping("/status")
     public ResponseEntity<LikeResponse> getLikeStatus(
             @RequestParam Long userId,
             @RequestParam Long postId) {
 
         return ResponseEntity.ok(likeService.getLike(userId, postId));
+    }
+    @GetMapping("/comment/status")
+    public ResponseEntity<LikeResponse> getCommentLikeStatus(
+            @RequestParam Long userId,
+            @RequestParam Long commentId) {
+
+        return ResponseEntity.ok(likeService.getCommentLike(userId, commentId));
     }
 
     @GetMapping("/story/isLike")

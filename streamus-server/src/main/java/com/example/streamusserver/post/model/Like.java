@@ -23,9 +23,20 @@ public class Like {
     @ManyToOne
     @JoinColumn(name = "story_id")
     private Story story;
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 
     private LocalDateTime createdAt;
     private int likeCount;
+
+    public Comment getComment() {
+        return comment;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
 
     public Long getId() {
         return id;
