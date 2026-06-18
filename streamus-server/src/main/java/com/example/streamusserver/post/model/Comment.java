@@ -40,6 +40,8 @@ public class Comment {
     @JsonBackReference
     private Comment parentComment;
 
+    @Column(name = "replies_count")
+    private int repliesCount;
     @Column(name = "likes_count")
     private int likesCount;
 
@@ -158,6 +160,14 @@ public class Comment {
 
     public List<Comment> getReplies() {
         return replies;
+    }
+
+    public int getRepliesCount() {
+        return repliesCount;
+    }
+
+    public void setRepliesCount(int repliesCount) {
+        this.repliesCount = repliesCount;
     }
 
     public void setReplies(List<Comment> replies) {

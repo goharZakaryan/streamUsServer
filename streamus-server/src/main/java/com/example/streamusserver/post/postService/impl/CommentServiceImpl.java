@@ -49,7 +49,7 @@ public class CommentServiceImpl implements CommentService {
 
         UserProfile user = userProfileService.findById(commentDTO.getAccountId())
                 .orElseThrow(() ->
-                        new UserNotFoundException("user not found"));
+                        new UserNotFoundException("User not found"));
 
         Comment comment = new Comment();
 
@@ -62,26 +62,38 @@ public class CommentServiceImpl implements CommentService {
 
             Comment parentComment = commentRepository
                     .findById(commentDTO.getParentCommentId())
-                    .get();
+                    .orElseThrow(() ->
+                            new RuntimeException("Parent comment not found"));
 
-            // Optional: allow only 1 level replies like Instagram
+            // Allow only 1 level replies
             if (parentComment.getParentComment() != null) {
-                throw new RuntimeException(
-                        "Nested replies are not allowed"
-                );
+                throw new RuntimeException("Nested replies are not allowed");
             }
 
             comment.setParentComment(parentComment);
+
+            // Increment reply count
+            parentComment.setRepliesCount(
+                    (parentComment.getRepliesCount() == 0
+                            ? 0
+                            : parentComment.getRepliesCount()) + 1
+            );
+
+            commentRepository.save(parentComment);
         }
 
-        // increase comments count
-        post.setCommentsCount(post.getCommentsCount() + 1);
+        // Increment total comments count on post
+        post.setCommentsCount(
+                (post.getCommentsCount() == 0
+                        ? 0
+                        : post.getCommentsCount()) + 1
+        );
 
         postRepository.save(post);
 
         Comment savedComment = commentRepository.save(comment);
 
-        // notification
+        // Notification
         if (!user.getId().equals(post.getAccount().getId())) {
 
             notificationService.createCommentNotification(
@@ -124,20 +136,20 @@ public class CommentServiceImpl implements CommentService {
 
         CommentRepliesResponse response = new CommentRepliesResponse();
 
-            // optional auth check (եթե ունես token system)
-            if (accountId == null || accessToken == null) {
-                response.setError(true);
-                return response;
-            }
+        // optional auth check (եթե ունես token system)
+        if (accountId == null || accessToken == null) {
+            response.setError(true);
+            return response;
+        }
 
-            List<Comment> replies =
-                    commentRepository.findByParentCommentIdOrderByCreatedAtAsc(commentId);
+        List<Comment> replies =
+                commentRepository.findByParentCommentIdOrderByCreatedAtAsc(commentId);
         List<CommentResponseDto> commentResponseDtos = replies.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
 
-            response.setError(false);
-            response.setReplies(commentResponseDtos);
+        response.setError(false);
+        response.setReplies(commentResponseDtos);
 
-            return response;
+        return response;
     }
 
 //    @Transactional
@@ -185,7 +197,7 @@ public class CommentServiceImpl implements CommentService {
         dto.setUpdatedAt(comment.getUpdatedAt());
         dto.setLikeCount(comment.getLikesCount());
         dto.setEdited(comment.isEdited());
-
+        dto.setReplyCount(comment.getRepliesCount());
         if (comment.getParentComment() != null) {
             dto.setParentCommentId(comment.getParentComment().getId());
         }

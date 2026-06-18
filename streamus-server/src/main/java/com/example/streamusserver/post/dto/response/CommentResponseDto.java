@@ -24,7 +24,16 @@ public class CommentResponseDto {
     private LocalDateTime updatedAt;
     private boolean edited;
     private int likeCount;
+    private int replyCount;
     private Long parentCommentId;
+
+    public int getReplyCount() {
+        return replyCount;
+    }
+
+    public void setReplyCount(int replyCount) {
+        this.replyCount = replyCount;
+    }
 
     public Long getParentCommentId() {
         return parentCommentId;
