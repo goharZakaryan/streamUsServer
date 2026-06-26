@@ -52,12 +52,11 @@ public class CommentServiceImpl implements CommentService {
                         new UserNotFoundException("User not found"));
 
         Comment comment = new Comment();
-
         comment.setPost(post);
         comment.setUser(user);
         comment.setContent(commentDTO.getCommentText());
 
-        // Reply logic
+        // Reply logic (supports unlimited nested replies)
         if (commentDTO.getParentCommentId() != null) {
 
             Comment parentComment = commentRepository
@@ -65,37 +64,29 @@ public class CommentServiceImpl implements CommentService {
                     .orElseThrow(() ->
                             new RuntimeException("Parent comment not found"));
 
-            // Allow only 1 level replies
-            if (parentComment.getParentComment() != null) {
-                throw new RuntimeException("Nested replies are not allowed");
-            }
-
             comment.setParentComment(parentComment);
 
-            // Increment reply count
-            parentComment.setRepliesCount(
-                    (parentComment.getRepliesCount() == 0
-                            ? 0
-                            : parentComment.getRepliesCount()) + 1
-            );
+            // Find the root comment
+            Comment rootComment = parentComment;
 
-            commentRepository.save(parentComment);
+            while (rootComment.getParentComment() != null) {
+                rootComment = rootComment.getParentComment();
+            }
+
+            // Increase reply count only on the root comment
+            rootComment.setRepliesCount(rootComment.getRepliesCount() + 1);
+            commentRepository.save(rootComment);
         }
 
-        // Increment total comments count on post
-        post.setCommentsCount(
-                (post.getCommentsCount() == 0
-                        ? 0
-                        : post.getCommentsCount()) + 1
-        );
-
+        // Increase total comments count on post
+        post.setCommentsCount(post.getCommentsCount() + 1);
         postRepository.save(post);
 
+        // Save comment
         Comment savedComment = commentRepository.save(comment);
 
         // Notification
         if (!user.getId().equals(post.getAccount().getId())) {
-
             notificationService.createCommentNotification(
                     user,
                     post,
