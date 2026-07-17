@@ -83,7 +83,7 @@ public class NotificationServiceImpl implements NotificationService {
                         .peek(notification -> notification.setRead(true))
                         .toList()
         );
-
+        System.out.println(notifications.size());
         return new NotificationResponseDto(byRecipientIdAndIsReadFalse);
     }
 

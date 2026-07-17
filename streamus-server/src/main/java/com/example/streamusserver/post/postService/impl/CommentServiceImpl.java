@@ -111,7 +111,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getCommentsByPostId(CommentRequestDto commentRequestDto) {
-        List<Comment> comments = commentRepository.findByPostIdAndParentCommentIsNullOrderByCreatedAtDesc(commentRequestDto.getPostId());
+   List<Comment> comments = commentRepository.findByPostIdAndParentCommentIsNullOrderByCreatedAtDesc(commentRequestDto.getPostId());
         List<CommentResponseDto> commentResponseDtos = comments.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
 
         return commentResponseDtos;
