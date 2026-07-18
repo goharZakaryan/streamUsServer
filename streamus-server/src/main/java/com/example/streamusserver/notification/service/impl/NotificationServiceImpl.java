@@ -8,6 +8,7 @@ import com.example.streamusserver.notification.model.Notification;
 import com.example.streamusserver.notification.model.enums.NotificationType;
 import com.example.streamusserver.notification.repository.NotificationRepository;
 import com.example.streamusserver.notification.service.NotificationService;
+import com.example.streamusserver.post.model.Comment;
 import com.example.streamusserver.post.model.Post;
 import com.example.streamusserver.security.JwtUtil;
 import com.example.streamusserver.service.UserProfileService;
@@ -53,6 +54,17 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setCreatedAt(LocalDateTime.now());
         notification.setUserProfile(userProfile);
         notification.setPost(post);
+        return notificationRepository.save(notification);
+    }
+    public Notification createCommentLikeNotification(Comment comment,  UserProfile userProfile) {
+
+        Notification notification = new Notification();
+        notification.setType(NotificationType.COMMENT_LIKE);
+        notification.setSenderId(userProfile.getId());
+        notification.setRecipientId(comment.getPost().getId());
+        notification.setReferenceId(comment.getId());
+        notification.setCreatedAt(LocalDateTime.now());
+        notification.setUserProfile(userProfile);
         return notificationRepository.save(notification);
     }
 
@@ -115,7 +127,7 @@ public class NotificationServiceImpl implements NotificationService {
         return notifications.stream()
                 .map(notification -> {
                     Notify notify = new Notify();
-//                    notify.setCreateAt(notification.getCreatedAt().toString());
+                    notify.setCreateAt(notification.getCreatedAt().toString());
                     notify.setFromUserFullname(notification.getUserProfile().getFullname());
                     notify.setFromUserId(notification.getUserProfile().getId());
                     notify.setFromUserPhotoUrl(notification.getUserProfile().getPhotoUrl());

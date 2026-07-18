@@ -4,6 +4,7 @@ import com.example.streamusserver.model.UserProfile;
 import com.example.streamusserver.notification.dto.NotificationRequestDto;
 import com.example.streamusserver.notification.dto.NotificationResponseDto;
 import com.example.streamusserver.notification.model.Notification;
+import com.example.streamusserver.post.model.Comment;
 import com.example.streamusserver.post.model.Post;
 
 public interface NotificationService {
@@ -18,4 +19,6 @@ public interface NotificationService {
     void deleteAllByPost(Post post);
 
     Notification createCommentNotification(UserProfile commenterId, Post postId, String commentText);
+
+     Notification createCommentLikeNotification(Comment comment, UserProfile userProfile);
 }

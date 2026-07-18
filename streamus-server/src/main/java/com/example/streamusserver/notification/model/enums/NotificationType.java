@@ -5,6 +5,7 @@ public enum NotificationType {
     FOLLOWER,
     LIKE,
     COMMENT,
+    COMMENT_LIKE,
     FRIEND_REQUEST_ACCEPTED,TYPE_GIFT,
     IMAGE_COMMENT,
     IMAGE_COMMENT_REPLY,

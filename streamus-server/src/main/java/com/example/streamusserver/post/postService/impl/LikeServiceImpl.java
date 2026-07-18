@@ -74,7 +74,6 @@ public class LikeServiceImpl implements LikeService {
             UserProfile user = userProfileService.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             Story story = storyService.findById(storyId);
-
             Like like = new Like();
             like.setUser(user);
             like.setStory(story);
@@ -99,6 +98,7 @@ public class LikeServiceImpl implements LikeService {
             UserProfile user = userProfileService.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             Comment comment = commentService.findById(commentId);
+            Post post =postRepository.findById(comment.getPost().id) .orElseThrow(() -> new RuntimeException("User not found"));
 
             Like like = new Like();
             like.setUser(user);
@@ -106,10 +106,10 @@ public class LikeServiceImpl implements LikeService {
             like.setCreatedAt(LocalDateTime.now());
 
             likeRepository.save(like);
-//            if (!userId.equals(story.getUserId())){
-//                notificationService.createLikeNotification(userId,storyId,user,story);
-//
-//            }
+            if (!userId.equals(post.getAccount().getId())){
+                notificationService.createCommentLikeNotification(comment,user);
+
+            }
             return new LikeResponse(true, ++likeCount); // Post liked
         }
     }

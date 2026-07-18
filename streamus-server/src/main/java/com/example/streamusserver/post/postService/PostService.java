@@ -15,12 +15,19 @@ import java.util.Optional;
 
 public interface PostService {
     String saveFile(MultipartFile file, Long accountId);
+
     Post updateItem(Post item);
+
     void deletePost(HideItemRequestDto itemRequestDto);
+
     boolean updateRepost(Long itemId, String userId);
-List<MediaItemDTO> getAllSongs();
+
+    List<MediaItemDTO> getAllSongs();
+
     StreamResponseDto getItems(StreamRequestDto request);
+
     PostResponseDto saveAudioToDatabase(PostRequestDto postRequestDto);
+
     PostResponseDto savePostToDatabase(PostRequestDto postRequest);
 
     PostResponseDto editPost(PostRequestDto postRequest);
