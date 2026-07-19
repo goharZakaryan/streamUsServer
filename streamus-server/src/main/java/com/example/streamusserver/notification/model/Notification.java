@@ -2,6 +2,7 @@ package com.example.streamusserver.notification.model;
 
 import com.example.streamusserver.model.UserProfile;
 import com.example.streamusserver.notification.model.enums.NotificationType;
+import com.example.streamusserver.post.model.Comment;
 import com.example.streamusserver.post.model.Post;
 import jakarta.persistence.*;
 
@@ -24,7 +25,8 @@ public class Notification {
     private Long recipientId;
     private Long referenceId;
     private String message;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Comment comment;
     @Column(columnDefinition = "boolean default false")
     private Boolean isRead = false;
 
@@ -110,5 +112,12 @@ public class Notification {
         this.post = post;
     }
 
-// Getters and setters
+    public Comment getComment() {
+        return comment;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
+    // Getters and setters
 }

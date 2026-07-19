@@ -69,6 +69,27 @@ public class NotificationServiceImpl implements NotificationService {
         return notificationRepository.save(notification);
     }
 
+    @Override
+    public void createReplyNotification(UserProfile sender,
+                                                UserProfile recipient,
+                                                Post post,
+                                                Comment comment,
+                                                String commentText) {
+
+        Notification notification = new Notification();
+        notification.setType(NotificationType.COMMENT_REPLY);
+        notification.setSenderId(sender.getId());
+        notification.setRecipientId(recipient.getId());
+        notification.setReferenceId(comment.getId());
+        notification.setCreatedAt(LocalDateTime.now());
+        notification.setUserProfile(sender);
+        notification.setPost(post);
+        notification.setMessage(commentText);
+        notification.setRead(false);
+
+         notificationRepository.save(notification);
+    }
+
     public Notification createCommentNotification(UserProfile commenterId, Post postId, String commentText) {
 
 

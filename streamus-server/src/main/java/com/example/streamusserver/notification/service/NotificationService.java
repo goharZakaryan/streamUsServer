@@ -21,4 +21,6 @@ public interface NotificationService {
     Notification createCommentNotification(UserProfile commenterId, Post postId, String commentText);
 
      Notification createCommentLikeNotification(Comment comment, UserProfile userProfile, Post post);
+
+    void createReplyNotification(UserProfile user, UserProfile user1, Post post, Comment savedComment, String commentText);
 }

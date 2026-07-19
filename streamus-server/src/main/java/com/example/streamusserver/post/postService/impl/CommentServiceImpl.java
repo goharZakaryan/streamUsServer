@@ -22,7 +22,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,47 +58,83 @@ public class CommentServiceImpl implements CommentService {
         comment.setUser(user);
         comment.setContent(commentDTO.getCommentText());
 
-        // Reply logic (supports unlimited nested replies)
+        Comment parentComment = null;
+
+        // Reply logic
         if (commentDTO.getParentCommentId() != null) {
 
-            Comment parentComment = commentRepository
+            parentComment = commentRepository
                     .findById(commentDTO.getParentCommentId())
                     .orElseThrow(() ->
                             new RuntimeException("Parent comment not found"));
 
             comment.setParentComment(parentComment);
 
-            // Find the root comment
+            // Find root comment
             Comment rootComment = parentComment;
 
             while (rootComment.getParentComment() != null) {
                 rootComment = rootComment.getParentComment();
             }
 
-            // Increase reply count only on the root comment
             rootComment.setRepliesCount(rootComment.getRepliesCount() + 1);
             commentRepository.save(rootComment);
         }
 
-        // Increase total comments count on post
+        // Increase comments count
         post.setCommentsCount(post.getCommentsCount() + 1);
         postRepository.save(post);
 
         // Save comment
         Comment savedComment = commentRepository.save(comment);
 
-        // Notification
-        if (!user.getId().equals(post.getAccount().getId())) {
+        // ---------------- Notifications ----------------
+
+        Set<Long> notifiedUsers = new HashSet<>();
+
+        // Notify post owner
+        Long postOwnerId = post.getAccount().getId();
+
+        if (!postOwnerId.equals(user.getId())) {
+
             notificationService.createCommentNotification(
                     user,
                     post,
                     commentDTO.getCommentText()
             );
+
+            notifiedUsers.add(postOwnerId);
+        }
+
+        // Notify all parent comment owners
+        if (parentComment != null) {
+
+            Comment current = parentComment;
+
+            while (current != null) {
+
+                Long receiverId = current.getUser().getId();
+
+                if (!receiverId.equals(user.getId())
+                        && !notifiedUsers.contains(receiverId)) {
+
+                    notificationService.createReplyNotification(
+                            user,
+                            current.getUser(),
+                            post,
+                            savedComment,
+                            commentDTO.getCommentText()
+                    );
+
+                    notifiedUsers.add(receiverId);
+                }
+
+                current = current.getParentComment();
+            }
         }
 
         return mapToDTO(savedComment);
     }
-
     @Transactional(readOnly = true)
     public Page<CommentResponseDto> getCommentsByPostId(Long postId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
