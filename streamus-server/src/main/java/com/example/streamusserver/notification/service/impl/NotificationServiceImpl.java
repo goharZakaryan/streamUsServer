@@ -56,7 +56,7 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setPost(post);
         return notificationRepository.save(notification);
     }
-    public Notification createCommentLikeNotification(Comment comment,  UserProfile userProfile) {
+    public Notification createCommentLikeNotification(Comment comment,  UserProfile userProfile, Post post) {
 
         Notification notification = new Notification();
         notification.setType(NotificationType.COMMENT_LIKE);
@@ -65,6 +65,7 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setReferenceId(comment.getId());
         notification.setCreatedAt(LocalDateTime.now());
         notification.setUserProfile(userProfile);
+        notification.setPost(post);
         return notificationRepository.save(notification);
     }
 
