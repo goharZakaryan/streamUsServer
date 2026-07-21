@@ -72,7 +72,8 @@ public class CommentServiceImpl implements CommentService {
 
             // Find root comment
             Comment rootComment = parentComment;
-
+            rootComment.setRepliesCount(rootComment.getRepliesCount() + 1);
+            commentRepository.save(rootComment);
             while (rootComment.getParentComment() != null) {
                 rootComment = rootComment.getParentComment();
             }
