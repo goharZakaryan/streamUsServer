@@ -62,9 +62,11 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Like> likes = new HashSet<>();
+
     // Default constructor
     public Comment() {
         this.createdAt = LocalDateTime.now();
+        this.updatedAt=LocalDateTime.now();
     }
 
     public Set<Like> getLikes() {
