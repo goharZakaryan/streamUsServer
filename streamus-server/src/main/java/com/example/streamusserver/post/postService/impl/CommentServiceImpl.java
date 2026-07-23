@@ -184,7 +184,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         List<Comment> replies =
-                commentRepository.findAllByRootId(commentId);
+                commentRepository.findAllByRootIdOrderByCreatedAtAscIdAsc(commentId);
         List<CommentResponseDto> commentResponseDtos = replies.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
         response.setError(false);
         response.setReplies(commentResponseDtos);
