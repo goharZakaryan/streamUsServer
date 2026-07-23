@@ -23,7 +23,7 @@ public class Comment {
     @JoinColumn(name = "post_id", nullable = false)
     @JsonIgnore
     private Post post;
-
+private Long rootId;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserProfile user;
@@ -186,6 +186,14 @@ public class Comment {
 
     public void setReplies(List<Comment> replies) {
         this.replies = replies;
+    }
+
+    public Long getRootId() {
+        return rootId;
+    }
+
+    public void setRootId(Long rootId) {
+        this.rootId = rootId;
     }
 }
 

@@ -70,16 +70,28 @@ public class CommentServiceImpl implements CommentService {
 
             comment.setParentComment(parentComment);
 
-            // Find root comment
-            Comment rootComment = parentComment;
-            rootComment.setRepliesCount(rootComment.getRepliesCount() + 1);
-            commentRepository.save(rootComment);
-            while (rootComment.getParentComment() != null) {
-                rootComment = rootComment.getParentComment();
-            }
+            // Root-ը որոշում ենք առանց ծառով քայլելու.
+            // Եթե parent-ն ինքն արդեն ունի rootId, ուրեմն reply-ն էլ նույն root-ին է պատկանում,
+            // հակառակ դեպքում parent-ը ինքն է root-ը
+            Long rootId = (parentComment.getRootId() != null)
+                    ? parentComment.getRootId()
+                    : parentComment.getId();
 
-            rootComment.setRepliesCount(rootComment.getRepliesCount() + 1);
-            commentRepository.save(rootComment);
+            comment.setRootId(rootId);
+
+            // Immediate parent-ի repliesCount-ը թարմացնում ենք
+            parentComment.setRepliesCount(parentComment.getRepliesCount() + 1);
+            commentRepository.save(parentComment);
+
+            // Root comment-ի repliesCount-ը թարմացնում ենք
+            // (եթե parent-ը ինքն է root-ը, չկրկնվի save-ը)
+            if (!rootId.equals(parentComment.getId())) {
+                Comment rootComment = commentRepository.findById(rootId)
+                        .orElseThrow(() ->
+                                new RuntimeException("Root comment not found"));
+                rootComment.setRepliesCount(rootComment.getRepliesCount() + 1);
+                commentRepository.save(rootComment);
+            }
         }
 
         // Increase comments count
@@ -135,8 +147,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         return mapToDTO(savedComment);
-    }
-    @Transactional(readOnly = true)
+    }    @Transactional(readOnly = true)
     public Page<CommentResponseDto> getCommentsByPostId(Long postId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Comment> comments = commentRepository.findByPostIdAndParentCommentIsNullOrderByCreatedAtDesc(postId, pageable);
@@ -173,9 +184,8 @@ public class CommentServiceImpl implements CommentService {
         }
 
         List<Comment> replies =
-                commentRepository.findByParentCommentIdOrderByCreatedAtAsc(commentId);
+                commentRepository.findAllByRootId(commentId);
         List<CommentResponseDto> commentResponseDtos = replies.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
-
         response.setError(false);
         response.setReplies(commentResponseDtos);
 
