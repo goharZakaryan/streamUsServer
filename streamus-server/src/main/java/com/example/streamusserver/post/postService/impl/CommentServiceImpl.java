@@ -147,7 +147,9 @@ public class CommentServiceImpl implements CommentService {
         }
 
         return mapToDTO(savedComment);
-    }    @Transactional(readOnly = true)
+    }
+
+    @Transactional(readOnly = true)
     public Page<CommentResponseDto> getCommentsByPostId(Long postId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Comment> comments = commentRepository.findByPostIdAndParentCommentIsNullOrderByCreatedAtDesc(postId, pageable);
@@ -161,7 +163,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getCommentsByPostId(CommentRequestDto commentRequestDto) {
-   List<Comment> comments = commentRepository.findByPostIdAndParentCommentIsNullOrderByCreatedAtDesc(commentRequestDto.getPostId());
+        List<Comment> comments = commentRepository.findByPostIdAndParentCommentIsNullOrderByCreatedAtDesc(commentRequestDto.getPostId());
         List<CommentResponseDto> commentResponseDtos = comments.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
 
         return commentResponseDtos;
@@ -235,6 +237,7 @@ public class CommentServiceImpl implements CommentService {
         dto.setId(comment.getId());
         dto.setItemId(comment.getPost().getId());
         dto.setUserId(comment.getUser().getId());
+        dto.setFromUserId(comment.getUser().getId());
         dto.setUsername(comment.getUser().getUsername());
         dto.setUserAvatar(comment.getUser().getPhotoUrl());
         dto.setContent(comment.getContent());
