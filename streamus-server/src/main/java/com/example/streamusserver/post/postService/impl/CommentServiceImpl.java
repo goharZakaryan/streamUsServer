@@ -163,9 +163,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getCommentsByPostId(CommentRequestDto commentRequestDto) {
-        List<Comment> comments = commentRepository.findByPostIdAndParentCommentIsNullOrderByCreatedAtDesc(commentRequestDto.getPostId());
-        List<CommentResponseDto> commentResponseDtos = comments.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
+        System.out.println();
+        List<Comment> comments = commentRepository.findVisibleComments(commentRequestDto.getAccountId(),commentRequestDto.getPostId());
 
+        List<CommentResponseDto> commentResponseDtos = comments.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
+    
         return commentResponseDtos;
     }
 
@@ -186,7 +188,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         List<Comment> replies =
-                commentRepository.findAllByRootIdOrderByCreatedAtAscIdAsc(commentId);
+                commentRepository.findVisibleRepliesByRootId(commentId,accountId);
         List<CommentResponseDto> commentResponseDtos = replies.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
         response.setError(false);
         response.setReplies(commentResponseDtos);

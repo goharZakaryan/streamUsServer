@@ -4,6 +4,8 @@ import com.example.streamusserver.post.model.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,5 +21,31 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     int countByPostId(Long postId);
 
-
-    List<Comment> findAllByRootIdOrderByCreatedAtAscIdAsc(Long id);}
+    @Query("""
+SELECT c
+FROM Comment c
+WHERE c.post.id = :postId
+AND c.parentComment IS NULL
+AND c.id NOT IN (
+    SELECT hc.comment.id
+    FROM HideComment hc
+    WHERE hc.user.id = :userId
+)
+ORDER BY c.createdAt DESC
+""")
+    List<Comment> findVisibleComments(Long userId, Long postId);
+    @Query("""
+SELECT c
+FROM Comment c
+WHERE c.rootId = :rootId
+AND c.id NOT IN (
+    SELECT hc.comment.id
+    FROM HideComment hc
+    WHERE hc.user.id = :userId
+)
+ORDER BY c.createdAt ASC, c.id ASC
+""")
+    List<Comment> findVisibleRepliesByRootId(@Param("rootId") Long rootId,
+                                             @Param("userId") Long userId);
+    List<Comment> findAllByRootIdOrderByCreatedAtAscIdAsc(Long id);
+}
