@@ -2,6 +2,7 @@ package com.example.streamusserver.post.controller;
 
 
 import com.example.streamusserver.post.dto.request.CommentRequestDto;
+import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.response.CommentRepliesResponse;
 import com.example.streamusserver.post.dto.response.CommentResponseDto;
 import com.example.streamusserver.post.postService.CommentService;
@@ -42,7 +43,12 @@ public class CommentController {
         List<CommentResponseDto> comments = commentService.getCommentsByPostId(commentDTO);
         return ResponseEntity.ok(comments);
     }
+    @PostMapping("/delete")
+    public ResponseEntity<Void> hideComment(@RequestBody HideItemRequestDto hideItemRequestDto) {
 
+        commentService.deleteComment(hideItemRequestDto);
+        return ResponseEntity.ok().build();
+    }
     @GetMapping("/{commentId}/replies")
     public ResponseEntity<CommentRepliesResponse> getReplies(
             @PathVariable Long commentId,

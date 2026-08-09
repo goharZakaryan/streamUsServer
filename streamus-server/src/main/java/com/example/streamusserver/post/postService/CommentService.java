@@ -1,6 +1,7 @@
 package com.example.streamusserver.post.postService;
 
 import com.example.streamusserver.post.dto.request.CommentRequestDto;
+import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.response.CommentRepliesResponse;
 import com.example.streamusserver.post.dto.response.CommentResponseDto;
 import com.example.streamusserver.post.model.Comment;
@@ -19,4 +20,6 @@ public interface CommentService {
    CommentRepliesResponse getRepliesForComment(Long commentId, Long accountId, String accessToken);
 
     Comment findById(Long commentId);
+
+    void deleteComment(HideItemRequestDto hideItemRequestDto);
 }

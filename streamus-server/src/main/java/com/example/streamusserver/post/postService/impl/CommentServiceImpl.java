@@ -5,11 +5,13 @@ import com.example.streamusserver.exception.UserNotFoundException;
 import com.example.streamusserver.model.UserProfile;
 import com.example.streamusserver.notification.service.NotificationService;
 import com.example.streamusserver.post.dto.request.CommentRequestDto;
+import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.response.CommentRepliesResponse;
 import com.example.streamusserver.post.dto.response.CommentResponseDto;
 import com.example.streamusserver.post.model.Comment;
 import com.example.streamusserver.post.model.Post;
 import com.example.streamusserver.post.postService.CommentService;
+import com.example.streamusserver.post.postService.HiddenCommentService;
 import com.example.streamusserver.post.repository.CommentRepository;
 import com.example.streamusserver.post.repository.PostRepository;
 import com.example.streamusserver.security.JwtUtil;
@@ -33,6 +35,8 @@ public class CommentServiceImpl implements CommentService {
     private final JwtUtil jwtUtil;
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private HiddenCommentService hiddenCommentService;
 
     @Autowired
     private PostRepository postRepository;
@@ -164,10 +168,10 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getCommentsByPostId(CommentRequestDto commentRequestDto) {
         System.out.println();
-        List<Comment> comments = commentRepository.findVisibleComments(commentRequestDto.getAccountId(),commentRequestDto.getPostId());
+        List<Comment> comments = commentRepository.findVisibleComments(commentRequestDto.getAccountId(), commentRequestDto.getPostId());
 
         List<CommentResponseDto> commentResponseDtos = comments.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
-    
+
         return commentResponseDtos;
     }
 
@@ -188,7 +192,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         List<Comment> replies =
-                commentRepository.findVisibleRepliesByRootId(commentId,accountId);
+                commentRepository.findVisibleRepliesByRootId(commentId, accountId);
         List<CommentResponseDto> commentResponseDtos = replies.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
         response.setError(false);
         response.setReplies(commentResponseDtos);
@@ -201,6 +205,42 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findById(commentId).get();
     }
 
+    @Override
+    @Transactional
+    public void deleteComment(HideItemRequestDto request) {
+
+        Comment comment = commentRepository
+                .findByIdAndUser_Id(
+                        request.getPostId(),
+                        request.getUserId()
+                )
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
+
+        Post post = postRepository.findById(comment.getPost().getId())
+                .orElseThrow(() ->
+                        new PostNotFoundException(comment.getPost().getId()));
+
+        List<Comment> replies =
+                commentRepository.findAllByRootId(comment.getId());
+
+        int deletedCount = replies.size() + 1;
+
+        post.setCommentsCount(
+                Math.max(0, post.getCommentsCount() - deletedCount)
+        );
+
+        // IMPORTANT:
+        // Նախ HideComment-ները
+        hiddenCommentService.deleteByCommentOrRootId(comment.getId());
+
+        // Հետո replies
+        commentRepository.deleteAll(replies);
+
+        // Հետո parent
+        commentRepository.delete(comment);
+
+        postRepository.save(post);
+    }
 //    @Transactional
 //    public CommentResponseDto updateComment(Long commentId, Long userId, String content) {
 //        Comment comment = commentRepository.findById(commentId)

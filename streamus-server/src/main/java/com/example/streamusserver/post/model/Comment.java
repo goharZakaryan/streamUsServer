@@ -23,7 +23,7 @@ public class Comment {
     @JoinColumn(name = "post_id", nullable = false)
     @JsonIgnore
     private Post post;
-private Long rootId;
+    private Long rootId;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserProfile user;
@@ -66,7 +66,7 @@ private Long rootId;
     // Default constructor
     public Comment() {
         this.createdAt = LocalDateTime.now();
-        this.updatedAt=LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public Set<Like> getLikes() {

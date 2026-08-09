@@ -7,6 +7,7 @@ import com.example.streamusserver.post.model.Comment;
 import com.example.streamusserver.post.model.HideComment;
 import com.example.streamusserver.post.postService.CommentService;
 import com.example.streamusserver.post.postService.HiddenCommentService;
+import com.example.streamusserver.post.repository.CommentRepository;
 import com.example.streamusserver.post.repository.HiddenCommentRepository;
 import com.example.streamusserver.security.JwtUtil;
 import com.example.streamusserver.service.UserProfileService;
@@ -29,7 +30,7 @@ public class HiddenCommentServiceImpl implements HiddenCommentService {
     private UserProfileService userProfileService;
 
     @Autowired
-    private CommentService commentService;
+    private CommentRepository commentService;
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -40,7 +41,7 @@ public class HiddenCommentServiceImpl implements HiddenCommentService {
         }
         UserProfile user = userProfileService.findById(itemRequestDto.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(itemRequestDto.getUserId().toString()));
-        Comment comment = commentService.findById(itemRequestDto.getPostId());
+        Comment comment = commentService.findById(itemRequestDto.getPostId()).get();
 
 
         HideComment hiddenContent = new HideComment();
@@ -56,8 +57,17 @@ public class HiddenCommentServiceImpl implements HiddenCommentService {
 
         UserProfile user = userProfileService.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
-        Comment comment = commentService.findById(postId);
+        Comment comment = commentService.findById(postId).get();
 
         hiddenCommentRepository.deleteByUserAndComment(user, comment);
+    }
+    @Transactional
+    public void deleteByCommentId(Long commentId) {
+        hiddenCommentRepository.deleteAllByCommentId(commentId);
+    }
+
+    @Override
+    public void deleteByCommentOrRootId(Long id) {
+        hiddenCommentRepository.deleteByCommentOrRootId(id);
     }
 }

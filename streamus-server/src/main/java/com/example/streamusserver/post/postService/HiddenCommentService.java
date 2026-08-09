@@ -5,4 +5,7 @@ import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 public interface HiddenCommentService {
     void hidePost(HideItemRequestDto itemRequestDto);
     void unHidePost(String username, Long postId);
+    void deleteByCommentId(Long commentId);
+
+    void deleteByCommentOrRootId(Long id);
 }
