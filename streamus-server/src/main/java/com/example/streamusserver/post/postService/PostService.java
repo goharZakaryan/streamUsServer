@@ -4,6 +4,7 @@ import com.example.streamusserver.dto.MediaItemDTO;
 import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.request.PostRequestDto;
 import com.example.streamusserver.post.dto.request.StreamRequestDto;
+import com.example.streamusserver.post.dto.response.GalleryItemResponse;
 import com.example.streamusserver.post.dto.response.PostResponseDto;
 import com.example.streamusserver.post.dto.response.StreamResponseDto;
 import com.example.streamusserver.post.dto.response.UploadResponseDto;
@@ -37,4 +38,10 @@ public interface PostService {
     Optional<Post> findById(Long id);
 
     UploadResponseDto uploadedVideoFile(MultipartFile videoFile, MultipartFile file, long l, String accessToken);
+
+    GalleryItemResponse getItemInfo(
+            Long accountId,
+            String accessToken,
+            Long itemId,
+            String language);
 }

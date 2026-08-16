@@ -8,6 +8,7 @@ import com.example.streamusserver.post.dto.request.CommentRequestDto;
 import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.response.CommentRepliesResponse;
 import com.example.streamusserver.post.dto.response.CommentResponseDto;
+import com.example.streamusserver.post.dto.response.CommentsResponseDto;
 import com.example.streamusserver.post.model.Comment;
 import com.example.streamusserver.post.model.Post;
 import com.example.streamusserver.post.postService.CommentService;
@@ -161,8 +162,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentsByPostId(Long postId) {
-        return commentRepository.findByPostId(postId);
+    public List<CommentResponseDto> getCommentsByPostId(Long postId) {
+        List<Comment> byPostId = commentRepository.findByPostId(postId);
+        List<CommentResponseDto> commentResponseDtos = byPostId.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
+        return commentResponseDtos;
+
     }
 
     @Transactional(readOnly = true)

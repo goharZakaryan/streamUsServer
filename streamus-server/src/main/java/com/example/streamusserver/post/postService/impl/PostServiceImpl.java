@@ -8,11 +8,10 @@ import com.example.streamusserver.notification.service.NotificationService;
 import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.request.PostRequestDto;
 import com.example.streamusserver.post.dto.request.StreamRequestDto;
-import com.example.streamusserver.post.dto.response.PostResponseDto;
-import com.example.streamusserver.post.dto.response.StreamResponseDto;
-import com.example.streamusserver.post.dto.response.UploadResponseDto;
+import com.example.streamusserver.post.dto.response.*;
 import com.example.streamusserver.post.mapper.MediaItemMapper;
 import com.example.streamusserver.post.mapper.PostMap;
+import com.example.streamusserver.post.mapper.PostMapper;
 import com.example.streamusserver.post.model.Audio;
 import com.example.streamusserver.post.model.Media;
 import com.example.streamusserver.post.model.MediaItem;
@@ -21,7 +20,7 @@ import com.example.streamusserver.post.model.enums.ImageType;
 import com.example.streamusserver.post.model.enums.MediaType;
 import com.example.streamusserver.post.postService.CommentService;
 import com.example.streamusserver.post.postService.PostService;
-import com.example.streamusserver.post.repository.AudioRepository;
+import com.example.streamusserver.post.repository.CommentRepository;
 import com.example.streamusserver.post.repository.MediaItemRepository;
 import com.example.streamusserver.post.repository.MediaRepository;
 import com.example.streamusserver.post.repository.PostRepository;
@@ -57,6 +56,7 @@ public class PostServiceImpl implements PostService {
     @Autowired
 
     private UserProfileService userProfileService;
+    private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final MediaRepository mediaRepository;
     @Autowired
@@ -110,7 +110,7 @@ public class PostServiceImpl implements PostService {
                     postRepository.save(post); // Update the post
 
                 } else {
-                    commentService.deleteAll(commentService.getCommentsByPostId(post.getId()));
+                    commentService.deleteAll(commentRepository.findByPostId(post.getId()));
                     notificationService.deleteAllByPost(post);
                     postRepository.delete(post);
                 }
@@ -340,6 +340,36 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<MediaItemDTO> getAllSongs() {
         return MediaItemMapper.convertToMediaItemDTOList(mediaItemRepository.findByType(ImageType.MUSIC));
+    }
+
+    @Transactional(readOnly = true)
+    public GalleryItemResponse getItemInfo(
+            Long accountId,
+            String accessToken,
+            Long itemId,
+            String language) {
+
+        Post item = postRepository
+                .findById(itemId)
+                .orElseThrow(() ->
+                        new RuntimeException("Item not found: " + itemId));
+
+        GalleryItemResponse response = new GalleryItemResponse();
+
+        response.setError(false);
+        response.setItemId(itemId);
+        response.setItem(PostMapper.mapToDto(item));
+
+        List<CommentResponseDto> comments =
+                commentService
+                        .getCommentsByPostId(itemId);
+
+        response.setComments(
+                new CommentsResponseDto(comments)
+        );
+
+
+        return response;
     }
 
     public Post updateItem(Post item) {

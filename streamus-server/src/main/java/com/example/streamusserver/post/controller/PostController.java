@@ -4,6 +4,7 @@ import com.example.streamusserver.dto.MediaItemDTO;
 import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.request.PostRequestDto;
 import com.example.streamusserver.post.dto.request.StreamRequestDto;
+import com.example.streamusserver.post.dto.response.GalleryItemResponse;
 import com.example.streamusserver.post.dto.response.PostResponseDto;
 import com.example.streamusserver.post.dto.response.StreamResponseDto;
 import com.example.streamusserver.post.dto.response.UploadResponseDto;
@@ -167,5 +168,21 @@ public class PostController {
     public ResponseEntity<List<MediaItemDTO>> getAllSongs() {
 
         return ResponseEntity.ok().body(postService.getAllSongs());
+    }
+    @PostMapping("/item/info")
+    public ResponseEntity<GalleryItemResponse> getItemInfo(
+            @RequestParam Long accountId,
+            @RequestParam String accessToken,
+            @RequestParam Long itemId,
+            @RequestParam(defaultValue = "en") String language) {
+
+        return ResponseEntity.ok(
+                postService.getItemInfo(
+                        accountId,
+                        accessToken,
+                        itemId,
+                        language
+                )
+        );
     }
 }
