@@ -1,5 +1,6 @@
 package com.example.streamusserver.post.dto.response;
 
+import com.example.streamusserver.model.UserProfile;
 import lombok.Data;
 
 import java.util.List;
@@ -11,7 +12,9 @@ public class PostResponse {
     private String fromUserPhotoUrl;
     private Long fromUserId;
     private String postText;
+    private String previewImgUrl;
     private int commentsCount;
+    private UserProfile owner;
    private List<MediaItemResponseDto> mediaItem;
 
 }
