@@ -343,7 +343,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Transactional(readOnly = true)
-    public GalleryItemResponse getItemInfo(
+    public PostResponse getItemInfo(
             Long accountId,
             String accessToken,
             Long itemId,
@@ -354,22 +354,17 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() ->
                         new RuntimeException("Item not found: " + itemId));
 
-        GalleryItemResponse response = new GalleryItemResponse();
 
-        response.setError(false);
-        response.setItemId(itemId);
-        response.setItem(PostMapper.mapToDto(item));
+        PostResponse postResponse=PostMapper.mapToDto(item);
 
         List<CommentResponseDto> comments =
                 commentService
                         .getCommentsByPostId(itemId);
 
-        response.setComments(
-                new CommentsResponseDto(comments)
-        );
+        postResponse.setComments(comments);
 
 
-        return response;
+        return postResponse;
     }
 
     public Post updateItem(Post item) {

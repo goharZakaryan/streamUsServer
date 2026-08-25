@@ -4,10 +4,7 @@ import com.example.streamusserver.dto.MediaItemDTO;
 import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.request.PostRequestDto;
 import com.example.streamusserver.post.dto.request.StreamRequestDto;
-import com.example.streamusserver.post.dto.response.GalleryItemResponse;
-import com.example.streamusserver.post.dto.response.PostResponseDto;
-import com.example.streamusserver.post.dto.response.StreamResponseDto;
-import com.example.streamusserver.post.dto.response.UploadResponseDto;
+import com.example.streamusserver.post.dto.response.*;
 import com.example.streamusserver.post.model.Post;
 import com.example.streamusserver.post.postService.PostService;
 import lombok.RequiredArgsConstructor;
@@ -170,7 +167,7 @@ public class PostController {
         return ResponseEntity.ok().body(postService.getAllSongs());
     }
     @PostMapping("/item/info")
-    public ResponseEntity<GalleryItemResponse> getItemInfo(
+    public ResponseEntity<PostResponse> getItemInfo(
             @RequestParam Long accountId,
             @RequestParam String accessToken,
             @RequestParam Long itemId,

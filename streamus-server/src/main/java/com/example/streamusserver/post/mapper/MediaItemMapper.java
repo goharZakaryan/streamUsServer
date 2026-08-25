@@ -31,7 +31,7 @@ public class MediaItemMapper {
         return dto;
     }
 
-    public List<MediaItemResponseDto> convertToMediaItemDTO(List<MediaItem> mediaItems) {
+    public static List<MediaItemResponseDto> convertToMediaItemDTO(List<MediaItem> mediaItems) {
         List<MediaItemResponseDto> mediaItemResponseDtos = new ArrayList<>();
         for (MediaItem mediaItem : mediaItems) {
             MediaItemResponseDto dto = new MediaItemResponseDto();

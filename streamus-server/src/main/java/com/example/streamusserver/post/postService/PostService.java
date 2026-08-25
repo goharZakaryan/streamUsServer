@@ -4,10 +4,7 @@ import com.example.streamusserver.dto.MediaItemDTO;
 import com.example.streamusserver.post.dto.request.HideItemRequestDto;
 import com.example.streamusserver.post.dto.request.PostRequestDto;
 import com.example.streamusserver.post.dto.request.StreamRequestDto;
-import com.example.streamusserver.post.dto.response.GalleryItemResponse;
-import com.example.streamusserver.post.dto.response.PostResponseDto;
-import com.example.streamusserver.post.dto.response.StreamResponseDto;
-import com.example.streamusserver.post.dto.response.UploadResponseDto;
+import com.example.streamusserver.post.dto.response.*;
 import com.example.streamusserver.post.model.Post;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,7 +36,7 @@ public interface PostService {
 
     UploadResponseDto uploadedVideoFile(MultipartFile videoFile, MultipartFile file, long l, String accessToken);
 
-    GalleryItemResponse getItemInfo(
+    PostResponse getItemInfo(
             Long accountId,
             String accessToken,
             Long itemId,
