@@ -56,7 +56,8 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setPost(post);
         return notificationRepository.save(notification);
     }
-    public Notification createCommentLikeNotification(Comment comment,  UserProfile userProfile, Post post) {
+
+    public Notification createCommentLikeNotification(Comment comment, UserProfile userProfile, Post post) {
 
         Notification notification = new Notification();
         notification.setType(NotificationType.COMMENT_LIKE);
@@ -71,10 +72,10 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void createReplyNotification(UserProfile sender,
-                                                UserProfile recipient,
-                                                Post post,
-                                                Comment comment,
-                                                String commentText) {
+                                        UserProfile recipient,
+                                        Post post,
+                                        Comment comment,
+                                        String commentText) {
 
         Notification notification = new Notification();
         notification.setType(NotificationType.COMMENT_REPLY);
@@ -87,10 +88,10 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setMessage(commentText);
         notification.setRead(false);
 
-         notificationRepository.save(notification);
+        notificationRepository.save(notification);
     }
 
-    public Notification createCommentNotification(UserProfile commenterId, Post postId, String commentText) {
+    public Notification createCommentNotification(Comment comment, UserProfile commenterId, Post postId, String commentText) {
 
 
         Notification notification = new Notification();
@@ -102,7 +103,7 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setPost(postId);
         notification.setMessage("Commented: " + commentText);
         notification.setCreatedAt(LocalDateTime.now());
-
+        notification.setComment(comment);
         return notificationRepository.save(notification);
     }
 
@@ -156,7 +157,7 @@ public class NotificationServiceImpl implements NotificationService {
                     notify.setFromUserUsername(notification.getUserProfile().getUsername());
                     notify.setFromUserState(notification.getUserProfile().getState());
                     notify.setItemId(notification.getPost().getId());
-
+                    notify.setCommentId(notification.getComment().getId());
                     notify.setType(notification.getType().name());
                     return notify;
                 })

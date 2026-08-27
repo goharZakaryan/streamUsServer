@@ -15,6 +15,7 @@ public interface CommentService {
     Page<CommentResponseDto> getCommentsByPostId(Long postId, int page, int size);
     List<CommentResponseDto> getCommentsByPostId(Long postId);
     List<CommentResponseDto> getCommentsByPostId(CommentRequestDto commentRequestDto);
+    List<CommentResponseDto> getNotifiedComments(CommentRequestDto commentRequestDto);
 
     void deleteAll(List<Comment> commentsByPostId);
 

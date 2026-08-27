@@ -3,7 +3,7 @@ package com.example.streamusserver.notification.dto;
 
 public class Notify {
 
-    private long id, itemId, fromUserId;
+    private long id, itemId, fromUserId,commentId;
     private int fromUserState, subType = 0;
     private String fromUserUsername,type, fromUserFullname, fromUserPhotoUrl, timeAgo,createAt;
 
@@ -11,6 +11,13 @@ public class Notify {
 
     }
 
+    public long getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(long commentId) {
+        this.commentId = commentId;
+    }
 
     public void setId(long id) {
 

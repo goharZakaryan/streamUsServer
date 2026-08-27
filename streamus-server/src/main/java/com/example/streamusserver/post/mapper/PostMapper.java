@@ -8,6 +8,7 @@ public class PostMapper {
 
     public static PostResponse mapToDto(Post post) {
         PostResponse response = new PostResponse();
+
         response.setFromUserUsername(post.getAccount().getUsername());
         response.setFromUserPhotoUrl(post.getAccount().getPhotoUrl());
         response.setOwner(post.getAccount());

@@ -115,7 +115,7 @@ public class CommentServiceImpl implements CommentService {
 
         if (!postOwnerId.equals(user.getId())) {
 
-            notificationService.createCommentNotification(
+            notificationService.createCommentNotification(savedComment,
                     user,
                     post,
                     commentDTO.getCommentText()
@@ -173,6 +173,15 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentResponseDto> getCommentsByPostId(CommentRequestDto commentRequestDto) {
         System.out.println();
         List<Comment> comments = commentRepository.findVisibleComments(commentRequestDto.getAccountId(), commentRequestDto.getPostId());
+
+        List<CommentResponseDto> commentResponseDtos = comments.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
+
+        return commentResponseDtos;
+    }
+
+    @Override
+    public List<CommentResponseDto> getNotifiedComments(CommentRequestDto commentRequestDto) {
+        List<Comment> comments = commentRepository.findRepliesByRootId(commentRequestDto.getParentCommentId());
 
         List<CommentResponseDto> commentResponseDtos = comments.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
 

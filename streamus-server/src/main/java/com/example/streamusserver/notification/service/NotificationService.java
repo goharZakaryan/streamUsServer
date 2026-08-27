@@ -18,7 +18,7 @@ public interface NotificationService {
 
     void deleteAllByPost(Post post);
 
-    Notification createCommentNotification(UserProfile commenterId, Post postId, String commentText);
+    Notification createCommentNotification(Comment comment,UserProfile commenterId, Post postId, String commentText);
 
      Notification createCommentLikeNotification(Comment comment, UserProfile userProfile, Post post);
 

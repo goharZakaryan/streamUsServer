@@ -43,6 +43,13 @@ public class CommentController {
         List<CommentResponseDto> comments = commentService.getCommentsByPostId(commentDTO);
         return ResponseEntity.ok(comments);
     }
+    @PostMapping("/notified")
+    public ResponseEntity<List<CommentResponseDto>> getNotifiedComments(
+            @RequestBody CommentRequestDto commentDTO) {
+
+        List<CommentResponseDto> comments = commentService.getNotifiedComments(commentDTO);
+        return ResponseEntity.ok(comments);
+    }
     @PostMapping("/delete")
     public ResponseEntity<Void> hideComment(@RequestBody HideItemRequestDto hideItemRequestDto) {
 

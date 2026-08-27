@@ -72,4 +72,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     void deleteRepliesByRootId(Long rootId);
 
  List<Comment> findAllByRootId(Long id);
+    @Query("""
+    SELECT c
+    FROM Comment c
+    WHERE c.rootId = :commentId
+    ORDER BY c.createdAt ASC, c.id ASC
+""")
+    List<Comment> findRepliesByRootId(@Param("commentId") Long commentId);
 }
