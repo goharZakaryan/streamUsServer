@@ -181,8 +181,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentResponseDto> getNotifiedComments(CommentRequestDto commentRequestDto) {
-        List<Comment> comments = commentRepository.findRepliesByRootId(commentRequestDto.getParentCommentId());
-
+       Comment com = commentRepository.findById(commentRequestDto.getParentCommentId())
+                .orElseThrow(() ->
+                        new RuntimeException("Comment not found"));
+        Long rootId = com.getRootId() != null
+                ? com.getRootId()
+                : com.getId();
+        List<Comment> comments=commentRepository.findCommentThread(com.getId(),rootId);
         List<CommentResponseDto> commentResponseDtos = comments.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
 
         return commentResponseDtos;

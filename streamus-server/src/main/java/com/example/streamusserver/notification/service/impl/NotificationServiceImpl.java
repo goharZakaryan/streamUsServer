@@ -67,6 +67,7 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setCreatedAt(LocalDateTime.now());
         notification.setUserProfile(userProfile);
         notification.setPost(post);
+        notification.setComment(comment);
         return notificationRepository.save(notification);
     }
 
@@ -87,7 +88,7 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setPost(post);
         notification.setMessage(commentText);
         notification.setRead(false);
-
+notification.setComment(comment);
         notificationRepository.save(notification);
     }
 

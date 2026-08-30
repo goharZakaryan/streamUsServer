@@ -36,6 +36,7 @@ public class CommentController {
         Page<CommentResponseDto> comments = commentService.getCommentsByPostId(postId, page, size);
         return ResponseEntity.ok(comments);
     }
+
     @PostMapping("/get")
     public ResponseEntity<List<CommentResponseDto>> getCommentsByPostId(
             @RequestBody CommentRequestDto commentDTO) {
@@ -43,6 +44,7 @@ public class CommentController {
         List<CommentResponseDto> comments = commentService.getCommentsByPostId(commentDTO);
         return ResponseEntity.ok(comments);
     }
+
     @PostMapping("/notified")
     public ResponseEntity<List<CommentResponseDto>> getNotifiedComments(
             @RequestBody CommentRequestDto commentDTO) {
@@ -50,12 +52,14 @@ public class CommentController {
         List<CommentResponseDto> comments = commentService.getNotifiedComments(commentDTO);
         return ResponseEntity.ok(comments);
     }
+
     @PostMapping("/delete")
     public ResponseEntity<Void> hideComment(@RequestBody HideItemRequestDto hideItemRequestDto) {
 
         commentService.deleteComment(hideItemRequestDto);
         return ResponseEntity.ok().build();
     }
+
     @GetMapping("/{commentId}/replies")
     public ResponseEntity<CommentRepliesResponse> getReplies(
             @PathVariable Long commentId,
@@ -99,4 +103,4 @@ public class CommentController {
 //        } catch (RuntimeException e) {
 //            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", e)
 //        }
-    }
+}

@@ -75,8 +75,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("""
     SELECT c
     FROM Comment c
-    WHERE c.rootId = :commentId
+    WHERE c.id = :commentId
+       OR c.rootId = :rootId
     ORDER BY c.createdAt ASC, c.id ASC
 """)
-    List<Comment> findRepliesByRootId(@Param("commentId") Long commentId);
-}
+    List<Comment> findCommentThread(
+            @Param("commentId") Long commentId,
+            @Param("rootId") Long rootId
+    );}
