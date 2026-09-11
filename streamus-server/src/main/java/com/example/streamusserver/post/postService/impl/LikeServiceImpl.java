@@ -106,8 +106,8 @@ public class LikeServiceImpl implements LikeService {
             like.setCreatedAt(LocalDateTime.now());
 
             likeRepository.save(like);
-            if (!userId.equals(post.getAccount().getId())){
-                notificationService.createCommentLikeNotification(comment,user, post);
+            if (!userId.equals(comment.getUser().getId())){
+                notificationService.createCommentLikeNotification(comment,comment.getUser(), post);
 
             }
             return new LikeResponse(true, ++likeCount); // Post liked
