@@ -158,7 +158,9 @@ notification.setComment(comment);
                     notify.setFromUserUsername(notification.getUserProfile().getUsername());
                     notify.setFromUserState(notification.getUserProfile().getState());
                     notify.setItemId(notification.getPost().getId());
-                    notify.setCommentId(notification.getComment().getId());
+                    if (notification.getComment() != null && notification.getComment().getId() != null) {
+                        notify.setCommentId(notification.getComment().getId());
+                    }
                     notify.setType(notification.getType().name());
                     return notify;
                 })
