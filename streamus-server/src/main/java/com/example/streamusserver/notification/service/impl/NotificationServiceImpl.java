@@ -112,7 +112,7 @@ notification.setComment(comment);
         if (!jwtUtil.isTokenValid(userId.getAuthToken())) {
             return new NotificationResponseDto(true);
         }
-        List<Notification> notifications = notificationRepository.findByRecipientIdAndIsReadFalse(userId.getTargetUserId());
+        List<Notification> notifications = notificationRepository.findBySenderIdAndIsReadFalse(userId.getTargetUserId());
         List<Notify> byRecipientIdAndIsReadFalse = mapNotificationToNotify(notifications);
         notificationRepository.saveAll(
                 notifications.stream()

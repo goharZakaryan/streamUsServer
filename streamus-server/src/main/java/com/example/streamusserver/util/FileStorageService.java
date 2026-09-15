@@ -1,6 +1,5 @@
 package com.example.streamusserver.util;
 
-import com.example.streamusserver.post.model.enums.ImageType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,12 +9,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.*;
 
 @Service
 public class FileStorageService {
     @Value("${file.path}")
     private String uploadDir;
-    public String uploadFile(MultipartFile file, Long  accountId) {
+
+    public String uploadFile(MultipartFile file, Long accountId) {
         if (file == null || file.isEmpty()) {
             return "";
         }
@@ -39,3 +40,4 @@ public class FileStorageService {
 
     }
 }
+

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    List<Notification> findByRecipientIdAndIsReadFalse(Long userId);
+    List<Notification> findBySenderIdAndIsReadFalse(Long userId);
     boolean existsByRecipientIdAndIsReadFalse(Long userId);
 
     void deleteAllByPost(Post post);
