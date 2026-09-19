@@ -1,6 +1,8 @@
 package com.example.streamusserver.market.repository;
 
 import com.example.streamusserver.market.entity.Advertisement;
+import com.example.streamusserver.model.UserProfile;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +24,8 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, Lo
     // հաջորդ էջ (cursor pagination)
     @Query("SELECT a FROM Advertisement a WHERE a.id < :itemId ORDER BY a.id DESC")
     List<Advertisement> findNext(@Param("itemId") long itemId, Pageable pageable);
+
+    List<Advertisement> findLatestByOwner(UserProfile ownerId, PageRequest of);
+
+    List<Advertisement> findNextByOwner(UserProfile ownerId, long itemId, PageRequest of);
 }

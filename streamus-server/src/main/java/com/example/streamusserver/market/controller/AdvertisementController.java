@@ -44,7 +44,14 @@ public class AdvertisementController {
             @RequestParam(defaultValue = "0") long itemId) {
 
         return advertisementService.preload(itemId);
-    }  @PostMapping("/ads/obj")
+    }
+    @PostMapping("/ads/user/preload")
+    public AdvertisementSearchResponseDto preload(
+            @RequestParam(defaultValue = "0") long itemId, @RequestParam(defaultValue = "0") long userId) {
+
+        return advertisementService.preload(itemId,userId);
+    }
+    @PostMapping("/ads/obj")
     public AdvertisementResponseDto getAdsObj(
             @RequestParam(value = "id") long itemId) {
 

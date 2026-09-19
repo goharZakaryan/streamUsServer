@@ -11,6 +11,6 @@ public interface AdvertisementService {
     AdvertisementSearchResponseDto search(String query, int itemId);
 
     AdvertisementSearchResponseDto preload(long itemId);
-
+    AdvertisementSearchResponseDto preload(long itemId, long ownerId);
     AdvertisementResponseDto getAdsObj(long itemId);
 }

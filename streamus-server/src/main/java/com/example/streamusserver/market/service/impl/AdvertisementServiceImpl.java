@@ -73,7 +73,42 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
         return response;
     }
+    public AdvertisementSearchResponseDto preload(long itemId, long ownerId) {
+UserProfile userProfile =userProfileService.findById(ownerId).get();
+        List<Advertisement> items;
 
+        if (itemId == 0) {
+            // Առաջին բեռնում — տվյալ owner-ի ամենավերջին item-ները
+            items = repository.findLatestByOwner(
+                    userProfile,
+                    PageRequest.of(0, LIMIT)
+            );
+        } else {
+            // Pagination — տվյալ owner-ի հաջորդ item-ները
+            items = repository.findNextByOwner(
+                    userProfile,
+                    itemId,
+                    PageRequest.of(0, LIMIT)
+            );
+        }
+
+        AdvertisementSearchResponseDto response = new AdvertisementSearchResponseDto();
+
+        response.setError(false);
+        response.setQuery("");
+        response.setItemCount(items.size());
+
+        // Cursor update
+        if (items.isEmpty()) {
+            response.setItemId(itemId);
+        } else {
+            response.setItemId(items.get(items.size() - 1).getId());
+        }
+
+        response.setItems(mapper.toDtoList(items));
+
+        return response;
+    }
     @Override
     public AdvertisementSearchResponseDto preload(long itemId) {
 
@@ -116,3 +151,4 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return dto;
     }
 }
+ 
