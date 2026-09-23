@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdvertisementController {
     private final AdvertisementService advertisementService;
 
-    @PostMapping(value = "/add/ads",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/add/ads", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AdvertisementResponseDto> createAd(
             @RequestPart("data") AdvertisementRequestDto request,
             @RequestPart("image") MultipartFile image,
@@ -30,27 +30,32 @@ public class AdvertisementController {
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
+
     @PostMapping("/ads/search")
     public ResponseEntity<AdvertisementSearchResponseDto> search(
             @RequestParam(required = false) String query, @RequestParam(defaultValue = "0") int itemId) {
 
         AdvertisementSearchResponseDto response =
-                advertisementService.search(query,itemId);
+                advertisementService.search(query, itemId);
 
         return ResponseEntity.ok(response);
     }
+
+
     @PostMapping("/ads/preload")
     public AdvertisementSearchResponseDto preload(
             @RequestParam(defaultValue = "0") long itemId) {
 
         return advertisementService.preload(itemId);
     }
+
     @PostMapping("/ads/user/preload")
     public AdvertisementSearchResponseDto preload(
             @RequestParam(defaultValue = "0") long itemId, @RequestParam(defaultValue = "0") long userId) {
 
-        return advertisementService.preload(itemId,userId);
+        return advertisementService.preload(itemId, userId);
     }
+
     @PostMapping("/ads/obj")
     public AdvertisementResponseDto getAdsObj(
             @RequestParam(value = "id") long itemId) {

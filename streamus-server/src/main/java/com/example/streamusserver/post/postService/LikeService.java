@@ -1,5 +1,6 @@
 package com.example.streamusserver.post.postService;
 
+import com.example.streamusserver.market.dto.response.AdvertisementSearchResponseDto;
 import com.example.streamusserver.post.dto.response.LikeResponse;
 
 public interface LikeService {
@@ -10,6 +11,7 @@ public interface LikeService {
     int getLikeCount(Long postId);
     LikeResponse checkIfUserLikedStory(Long userId, Long storyId);
     boolean checkIfUserLikedPost(Long userId, Long postId);
+    AdvertisementSearchResponseDto likeAdvertisement(long userId, long advertisementId);
 
     LikeResponse getCommentLike(Long userId, Long commentId);
 }

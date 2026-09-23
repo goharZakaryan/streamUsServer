@@ -54,6 +54,11 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Override
+    public Advertisement findById(Long id) {
+        return repository.findById(id).get();
+    }
+
+    @Override
     public AdvertisementSearchResponseDto search(String query, int itemId) {
         List<Advertisement> items;
 
@@ -150,5 +155,7 @@ UserProfile userProfile =userProfileService.findById(ownerId).get();
 
         return dto;
     }
+
+
 }
  

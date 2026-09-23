@@ -1,5 +1,6 @@
 package com.example.streamusserver.post.controller;
 
+import com.example.streamusserver.market.dto.response.AdvertisementSearchResponseDto;
 import com.example.streamusserver.post.dto.response.LikeResponse;
 import com.example.streamusserver.post.postService.LikeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,5 +58,11 @@ public class LikeController {
             @RequestParam Long storyId) {
 
         return ResponseEntity.ok(likeService.checkIfUserLikedStory(userId, storyId));
+    }
+    @PostMapping("/ads")
+    public ResponseEntity<AdvertisementSearchResponseDto> like(
+            @RequestParam long userId, @RequestParam long advertisementId) {
+
+        return ResponseEntity.ok(likeService.likeAdvertisement(userId,advertisementId));
     }
 }

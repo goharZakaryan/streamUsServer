@@ -1,5 +1,8 @@
 package com.example.streamusserver.post.postService.impl;
 
+import com.example.streamusserver.market.dto.response.AdvertisementSearchResponseDto;
+import com.example.streamusserver.market.entity.Advertisement;
+import com.example.streamusserver.market.service.AdvertisementService;
 import com.example.streamusserver.model.Story;
 import com.example.streamusserver.model.UserProfile;
 import com.example.streamusserver.notification.service.NotificationService;
@@ -35,6 +38,8 @@ public class LikeServiceImpl implements LikeService {
     private UserProfileService userProfileService;
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private AdvertisementService advertisementService;
 
     @Transactional
     public LikeResponse toggleLike(Long userId, Long postId) {
@@ -128,6 +133,12 @@ public class LikeServiceImpl implements LikeService {
 
     public boolean checkIfUserLikedPost(Long userId, Long postId) {
         return likeRepository.existsByUserIdAndPostId(userId, postId);
+    }
+
+    @Override
+    public AdvertisementSearchResponseDto likeAdvertisement(long userId, long advertisementId) {
+        Advertisement advertisement = advertisementService.findById(advertisementId);
+        return null;
     }
 
     @Override
