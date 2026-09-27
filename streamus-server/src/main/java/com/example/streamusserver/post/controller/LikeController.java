@@ -59,10 +59,5 @@ public class LikeController {
 
         return ResponseEntity.ok(likeService.checkIfUserLikedStory(userId, storyId));
     }
-    @PostMapping("/ads")
-    public ResponseEntity<AdvertisementSearchResponseDto> like(
-            @RequestParam long userId, @RequestParam long advertisementId) {
 
-        return ResponseEntity.ok(likeService.likeAdvertisement(userId,advertisementId));
-    }
 }

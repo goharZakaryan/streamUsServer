@@ -8,11 +8,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface AdvertisementService {
     AdvertisementResponseDto createAd(AdvertisementRequestDto req, MultipartFile image, Long userId);
-Advertisement findById(Long id);
+
+    Advertisement findById(Long id);
+
     AdvertisementSearchResponseDto search(String query, int itemId);
 
     AdvertisementSearchResponseDto preload(long itemId);
+
     AdvertisementSearchResponseDto preload(long itemId, long ownerId);
+
     AdvertisementResponseDto getAdsObj(long itemId);
 
+    void likeAdvertisement(Long advertisementId, Long userId);
 }

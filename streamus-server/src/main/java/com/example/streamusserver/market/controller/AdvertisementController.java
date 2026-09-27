@@ -62,4 +62,14 @@ public class AdvertisementController {
 
         return advertisementService.getAdsObj(itemId);
     }
+    @PostMapping("/ads/{advertisementId}/like")
+    public ResponseEntity<Void> likeAdvertisement(
+            @PathVariable long advertisementId,
+            @RequestParam long userId
+    ) {
+        advertisementService.likeAdvertisement(advertisementId, userId);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

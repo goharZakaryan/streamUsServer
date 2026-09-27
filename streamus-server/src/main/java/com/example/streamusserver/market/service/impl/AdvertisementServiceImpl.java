@@ -4,7 +4,9 @@ import com.example.streamusserver.market.dto.request.AdvertisementRequestDto;
 import com.example.streamusserver.market.dto.response.AdvertisementResponseDto;
 import com.example.streamusserver.market.dto.response.AdvertisementSearchResponseDto;
 import com.example.streamusserver.market.entity.Advertisement;
+import com.example.streamusserver.market.entity.AdvertisementLike;
 import com.example.streamusserver.market.mapper.AdvertisementMapper;
+import com.example.streamusserver.market.repository.AdvertisementLikeRepository;
 import com.example.streamusserver.market.repository.AdvertisementRepository;
 import com.example.streamusserver.market.service.AdvertisementService;
 import com.example.streamusserver.model.UserProfile;
@@ -17,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final FileStorageService fileStorageService;
     private final AdvertisementMapper mapper;
     private final AdvertisementRepository repository;
+    private final AdvertisementLikeRepository advertisementLikeRepository;
     private static final int LIMIT = 20;
 
     @Override
@@ -41,7 +46,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 //        }
 
 //        user.setBalance(user.getBalance() - price);
-        String fileName ="public/"+ fileStorageService.uploadFile(image, userId);
+        String fileName = "public/" + fileStorageService.uploadFile(image, userId);
 
         Advertisement ad = mapper.toEntity(req);
         ad.setOwner(user);
@@ -51,6 +56,30 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
 
         return mapper.toDto(saved);
+    }
+
+    public void likeAdvertisement(Long advertisementId, Long userId) {
+
+        if (advertisementLikeRepository
+                .existsByAdvertisementIdAndUserId(advertisementId, userId)) {
+            return;
+        }
+
+        Advertisement advertisement = repository
+                .findById(advertisementId)
+                .orElseThrow(() -> new RuntimeException("Advertisement not found"));
+
+        UserProfile user = userProfileService
+                .findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        AdvertisementLike like = new AdvertisementLike();
+
+        like.setAdvertisement(advertisement);
+        like.setUser(user);
+        like.setLikedAt(LocalDateTime.now());
+
+        advertisementLikeRepository.save(like);
     }
 
     @Override
@@ -78,8 +107,11 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
         return response;
     }
+
     public AdvertisementSearchResponseDto preload(long itemId, long ownerId) {
-UserProfile userProfile =userProfileService.findById(ownerId).get();
+
+        UserProfile userProfile = userProfileService.findById(ownerId).get();
+
         List<Advertisement> items;
 
         if (itemId == 0) {
@@ -97,7 +129,26 @@ UserProfile userProfile =userProfileService.findById(ownerId).get();
             );
         }
 
-        AdvertisementSearchResponseDto response = new AdvertisementSearchResponseDto();
+        // User-ի like արած Advertisement-ները
+        List<AdvertisementLike> likedItems =
+                advertisementLikeRepository.findByUserId(ownerId);
+
+        Set<Long> itemIds = items.stream()
+                .map(Advertisement::getId)
+                .collect(Collectors.toSet());
+
+        // Ավելացնում ենք like արածները, եթե արդեն list-ում չկան
+        for (AdvertisementLike like : likedItems) {
+
+            Advertisement advertisement = like.getAdvertisement();
+
+            if (itemIds.add(advertisement.getId())) {
+                items.add(advertisement);
+            }
+        }
+
+        AdvertisementSearchResponseDto response =
+                new AdvertisementSearchResponseDto();
 
         response.setError(false);
         response.setQuery("");
@@ -107,7 +158,9 @@ UserProfile userProfile =userProfileService.findById(ownerId).get();
         if (items.isEmpty()) {
             response.setItemId(itemId);
         } else {
-            response.setItemId(items.get(items.size() - 1).getId());
+            response.setItemId(
+                    items.get(items.size() - 1).getId()
+            );
         }
 
         response.setItems(mapper.toDtoList(items));
