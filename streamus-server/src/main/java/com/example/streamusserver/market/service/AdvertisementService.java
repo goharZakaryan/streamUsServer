@@ -19,5 +19,5 @@ public interface AdvertisementService {
 
     AdvertisementResponseDto getAdsObj(long itemId);
 
-    void likeAdvertisement(Long advertisementId, Long userId);
+    AdvertisementResponseDto likeAdvertisement(Long advertisementId, Long userId);
 }

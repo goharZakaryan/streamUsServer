@@ -58,11 +58,11 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return mapper.toDto(saved);
     }
 
-    public void likeAdvertisement(Long advertisementId, Long userId) {
+    public AdvertisementResponseDto likeAdvertisement(Long advertisementId, Long userId) {
 
         if (advertisementLikeRepository
                 .existsByAdvertisementIdAndUserId(advertisementId, userId)) {
-            return;
+            return new AdvertisementResponseDto(true);
         }
 
         Advertisement advertisement = repository
@@ -80,6 +80,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         like.setLikedAt(LocalDateTime.now());
 
         advertisementLikeRepository.save(like);
+        return new AdvertisementResponseDto(true);
+
     }
 
     @Override

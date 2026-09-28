@@ -12,9 +12,14 @@ public class AdvertisementResponseDto {
 //    private AdType type;
     private Long ownerId;
     private LocalDateTime createdAt;
-
+    private boolean error;
+    private boolean like;
     public Long getOwnerId() {
         return ownerId;
+    }
+
+    public AdvertisementResponseDto(boolean like) {
+        this.like = like;
     }
 
     public void setOwnerId(Long ownerId) {
@@ -67,5 +72,17 @@ public class AdvertisementResponseDto {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public boolean isError() {
+        return error;
+    }
+
+    public boolean isLike() {
+        return like;
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
     }
 }
