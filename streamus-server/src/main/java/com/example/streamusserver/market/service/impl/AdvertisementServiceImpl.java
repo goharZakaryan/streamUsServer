@@ -52,6 +52,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         ad.setOwner(user);
         ad.setCreatedAt(LocalDateTime.now());
         ad.setImageUrl(fileName);
+        ad.setPrice(req.getPrice());
         Advertisement saved = repository.save(ad);
 
 

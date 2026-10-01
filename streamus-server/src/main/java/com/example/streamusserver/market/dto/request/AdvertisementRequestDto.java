@@ -3,6 +3,7 @@ package com.example.streamusserver.market.dto.request;
 public class AdvertisementRequestDto {
     private String title;
     private String description;
+    private Double price;
 //    private AdType type;
 
     public String getTitle() {
@@ -21,5 +22,11 @@ public class AdvertisementRequestDto {
         this.description = description;
     }
 
+    public Double getPrice() {
+        return price;
+    }
 
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 }
