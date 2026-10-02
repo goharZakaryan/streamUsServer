@@ -9,6 +9,7 @@ public class AdvertisementResponseDto {
     private String description;
     private Double price;
     private String imageUrl;
+    private String location;
 //    private AdType type;
     private Long ownerId;
     private LocalDateTime createdAt;
@@ -84,5 +85,13 @@ public class AdvertisementResponseDto {
 
     public void setError(boolean error) {
         this.error = error;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

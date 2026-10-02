@@ -53,6 +53,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         ad.setCreatedAt(LocalDateTime.now());
         ad.setImageUrl(fileName);
         ad.setPrice(req.getPrice());
+        ad.setLocation(req.getLocation());
         Advertisement saved = repository.save(ad);
 
 
@@ -205,9 +206,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Override
     public AdvertisementResponseDto getAdsObj(long itemId) {
         Advertisement advertisement = repository.findById(itemId).get();
-        System.out.println(advertisement.getCreatedAt());
+        System.out.println(advertisement.getLocation());
         AdvertisementResponseDto dto = mapper.toDto(advertisement);
-        System.out.println(dto.getCreatedAt());
+        System.out.println(dto.getLocation());
 
         return dto;
     }

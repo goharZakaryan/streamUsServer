@@ -4,6 +4,7 @@ public class AdvertisementRequestDto {
     private String title;
     private String description;
     private Double price;
+    private String location;
 //    private AdType type;
 
     public String getTitle() {
@@ -28,5 +29,13 @@ public class AdvertisementRequestDto {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

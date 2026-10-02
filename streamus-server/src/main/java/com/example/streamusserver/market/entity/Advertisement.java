@@ -1,7 +1,6 @@
 package com.example.streamusserver.market.entity;
 
 import com.example.streamusserver.model.UserProfile;
-
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,7 +17,7 @@ public class Advertisement {
     private String title;
     private String description;
     private Double price;
-
+    private String location;
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)

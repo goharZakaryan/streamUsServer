@@ -8,6 +8,7 @@ public class AdvertisementSearchResponseDto {
     private int itemCount;
     private String query;
     private long itemId;
+
     private List<AdvertisementResponseDto> items;
 
     public boolean isError() {
