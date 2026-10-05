@@ -1,8 +1,10 @@
 package com.example.streamusserver.market.service.impl;
 
+import com.example.streamusserver.exception.UserNotFoundException;
 import com.example.streamusserver.market.dto.request.AdvertisementRequestDto;
 import com.example.streamusserver.market.dto.response.AdvertisementResponseDto;
 import com.example.streamusserver.market.dto.response.AdvertisementSearchResponseDto;
+import com.example.streamusserver.market.dto.response.CommonResponse;
 import com.example.streamusserver.market.entity.Advertisement;
 import com.example.streamusserver.market.entity.AdvertisementLike;
 import com.example.streamusserver.market.mapper.AdvertisementMapper;
@@ -10,12 +12,15 @@ import com.example.streamusserver.market.repository.AdvertisementLikeRepository;
 import com.example.streamusserver.market.repository.AdvertisementRepository;
 import com.example.streamusserver.market.service.AdvertisementService;
 import com.example.streamusserver.model.UserProfile;
+import com.example.streamusserver.security.JwtUtil;
 import com.example.streamusserver.service.UserProfileService;
 import com.example.streamusserver.util.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +37,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final AdvertisementRepository repository;
     private final AdvertisementLikeRepository advertisementLikeRepository;
     private static final int LIMIT = 20;
+    private final JwtUtil jwtUtil;
 
     @Override
     public AdvertisementResponseDto createAd(AdvertisementRequestDto req, MultipartFile image, Long userId) {
@@ -84,6 +90,33 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         advertisementLikeRepository.save(like);
         return new AdvertisementResponseDto(true);
 
+    }
+
+    @Override
+    public CommonResponse update(long itemId, String accessToken, Long accountId) {
+        String authenticatedUsername = jwtUtil.extractUsername(accessToken);
+
+        // Find the authenticated user's profile
+        UserProfile authenticatedUser = userProfileService.findByUsername(authenticatedUsername)
+                .orElseThrow(() -> new UserNotFoundException("Authenticated user not found"));
+
+        if (!jwtUtil.isTokenValid(accessToken)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to follow/unfollow on behalf of this account");
+        }
+        return null;
+    }
+
+    @Override
+    public CommonResponse delete(long itemId, String accessToken, Long accountId) {
+        if (!repository.existsById(itemId)) {
+            throw new RuntimeException("Market item not found: " + itemId);
+        }
+
+        if (!jwtUtil.isTokenValid(accessToken)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to follow/unfollow on behalf of this account");
+        }
+        repository.deleteById(itemId);
+        return null;
     }
 
     @Override

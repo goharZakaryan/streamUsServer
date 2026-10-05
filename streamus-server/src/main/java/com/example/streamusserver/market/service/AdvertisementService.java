@@ -3,6 +3,7 @@ package com.example.streamusserver.market.service;
 import com.example.streamusserver.market.dto.request.AdvertisementRequestDto;
 import com.example.streamusserver.market.dto.response.AdvertisementResponseDto;
 import com.example.streamusserver.market.dto.response.AdvertisementSearchResponseDto;
+import com.example.streamusserver.market.dto.response.CommonResponse;
 import com.example.streamusserver.market.entity.Advertisement;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,4 +21,8 @@ public interface AdvertisementService {
     AdvertisementResponseDto getAdsObj(long itemId);
 
     AdvertisementResponseDto likeAdvertisement(Long advertisementId, Long userId);
+
+    CommonResponse update(long itemId, String accessToken, Long accountId);
+
+    CommonResponse delete(long itemId, String accessToken, Long accountId);
 }

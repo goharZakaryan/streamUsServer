@@ -3,6 +3,7 @@ package com.example.streamusserver.market.controller;
 import com.example.streamusserver.market.dto.request.AdvertisementRequestDto;
 import com.example.streamusserver.market.dto.response.AdvertisementResponseDto;
 import com.example.streamusserver.market.dto.response.AdvertisementSearchResponseDto;
+import com.example.streamusserver.market.dto.response.CommonResponse;
 import com.example.streamusserver.market.service.AdvertisementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -56,12 +57,27 @@ public class AdvertisementController {
         return advertisementService.preload(itemId, userId);
     }
 
+    @PostMapping("/ads/delete")
+    public ResponseEntity<CommonResponse> delete(
+            @RequestParam(defaultValue = "0") Long accountId, @RequestParam(name = "accessToken") String accessToken, @RequestParam(defaultValue = "0") long itemId) {
+
+        return ResponseEntity.ok(advertisementService.delete(itemId, accessToken, accountId));
+    }
+
+    @PostMapping("/ads/update")
+    public ResponseEntity<CommonResponse> update(
+            @RequestParam(defaultValue = "0") Long accountId, @RequestParam(name = "accessToken") String accessToken, @RequestParam(defaultValue = "0") long itemId) {
+
+        return ResponseEntity.ok(advertisementService.update(itemId, accessToken, accountId));
+    }
+
     @PostMapping("/ads/obj")
     public AdvertisementResponseDto getAdsObj(
             @RequestParam(value = "id") long itemId) {
 
         return advertisementService.getAdsObj(itemId);
     }
+
     @PostMapping("/ads/{advertisementId}/like")
     public ResponseEntity<AdvertisementResponseDto> likeAdvertisement(
             @PathVariable long advertisementId,
@@ -69,7 +85,7 @@ public class AdvertisementController {
     ) {
 
 
-        return ResponseEntity.ok( advertisementService.likeAdvertisement(advertisementId, userId));
+        return ResponseEntity.ok(advertisementService.likeAdvertisement(advertisementId, userId));
     }
 
 }
