@@ -116,7 +116,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to follow/unfollow on behalf of this account");
         }
         repository.deleteById(itemId);
-        return null;
+        return new CommonResponse(true);
     }
 
     @Override
