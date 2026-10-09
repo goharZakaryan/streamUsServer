@@ -25,4 +25,6 @@ public interface AdvertisementService {
     CommonResponse update(long itemId, String accessToken, Long accountId);
 
     CommonResponse delete(long itemId, String accessToken, Long accountId);
+
+    AdvertisementResponseDto updateAd(long advertisementId, AdvertisementRequestDto request, MultipartFile image, Long userId);
 }

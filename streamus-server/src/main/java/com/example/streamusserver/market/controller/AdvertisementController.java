@@ -64,11 +64,19 @@ public class AdvertisementController {
         return ResponseEntity.ok(advertisementService.delete(itemId, accessToken, accountId));
     }
 
-    @PostMapping("/ads/update")
-    public ResponseEntity<CommonResponse> update(
-            @RequestParam(defaultValue = "0") Long accountId, @RequestParam(name = "accessToken") String accessToken, @RequestParam(defaultValue = "0") long itemId) {
+    @PutMapping(value = "/ads/{advertisementId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<AdvertisementResponseDto> updateAd(
+            @PathVariable long advertisementId,
+            @RequestPart("data") AdvertisementRequestDto request,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestParam Long userId
+    ) {
 
-        return ResponseEntity.ok(advertisementService.update(itemId, accessToken, accountId));
+        AdvertisementResponseDto response =
+
+                advertisementService.updateAd(advertisementId, request, image, userId);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/ads/obj")

@@ -15,6 +15,7 @@ import com.example.streamusserver.model.UserProfile;
 import com.example.streamusserver.security.JwtUtil;
 import com.example.streamusserver.service.UserProfileService;
 import com.example.streamusserver.util.FileStorageService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -94,17 +95,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     public CommonResponse update(long itemId, String accessToken, Long accountId) {
-        String authenticatedUsername = jwtUtil.extractUsername(accessToken);
-
-        // Find the authenticated user's profile
-        UserProfile authenticatedUser = userProfileService.findByUsername(authenticatedUsername)
-                .orElseThrow(() -> new UserNotFoundException("Authenticated user not found"));
-
-        if (!jwtUtil.isTokenValid(accessToken)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to follow/unfollow on behalf of this account");
-        }
         return null;
     }
+
 
     @Override
     public CommonResponse delete(long itemId, String accessToken, Long accountId) {
@@ -117,6 +110,37 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         }
         repository.deleteById(itemId);
         return new CommonResponse(true);
+    }
+
+    @Transactional
+    public AdvertisementResponseDto updateAd(long id,
+                                             AdvertisementRequestDto request,
+                                             MultipartFile image,
+                                             Long userId) {
+
+        Advertisement ad = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ad not found"));
+
+//        // Միայն սեփականատերը կարող է խմբագրել
+        if (!ad.getOwner().getId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not your advertisement");
+        }
+
+        ad.setTitle(request.getTitle());
+        ad.setDescription(request.getDescription());
+        ad.setPrice(request.getPrice());
+        ad.setLocation(request.getLocation());
+
+        // Նկարը թարմացնել միայն եթե նոր նկար է եկել
+        if (image != null && !image.isEmpty()) {
+            String newImageUrl ="public/"+ fileStorageService.uploadFile(image,ad.getOwner().getId());   // քո createAd-ում օգտագործվող նույն մեթոդը
+            // ըստ ցանկության՝ ջնջել հին նկարը
+            // imageStorageService.delete(ad.getImageUrl());
+            ad.setImageUrl(newImageUrl);
+            System.out.println(newImageUrl);
+        }
+
+        return mapper.toDto(repository.save(ad));
     }
 
     @Override
