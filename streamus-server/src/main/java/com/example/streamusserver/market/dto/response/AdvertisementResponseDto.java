@@ -83,6 +83,10 @@ public class AdvertisementResponseDto {
         return like;
     }
 
+    public void setLike(boolean like) {
+        this.like = like;
+    }
+
     public void setError(boolean error) {
         this.error = error;
     }

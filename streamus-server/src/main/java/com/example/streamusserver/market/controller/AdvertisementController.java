@@ -45,16 +45,16 @@ public class AdvertisementController {
 
     @PostMapping("/ads/preload")
     public AdvertisementSearchResponseDto preload(
-            @RequestParam(defaultValue = "0") long itemId) {
+            @RequestParam(defaultValue = "0") long itemId, @RequestParam(defaultValue = "0") long userId) {
 
-        return advertisementService.preload(itemId);
+        return advertisementService.preload(itemId,userId);
     }
 
     @PostMapping("/ads/user/preload")
-    public AdvertisementSearchResponseDto preload(
+    public AdvertisementSearchResponseDto preloadForUser(
             @RequestParam(defaultValue = "0") long itemId, @RequestParam(defaultValue = "0") long userId) {
 
-        return advertisementService.preload(itemId, userId);
+        return advertisementService.preloadForUser(itemId, userId);
     }
 
     @PostMapping("/ads/delete")
@@ -81,9 +81,10 @@ public class AdvertisementController {
 
     @PostMapping("/ads/obj")
     public AdvertisementResponseDto getAdsObj(
-            @RequestParam(value = "id") long itemId) {
+            @RequestParam(value = "id") long itemId,
+            @RequestParam long userId) {
 
-        return advertisementService.getAdsObj(itemId);
+        return advertisementService.getAdsObj(itemId,userId);
     }
 
     @PostMapping("/ads/{advertisementId}/like")

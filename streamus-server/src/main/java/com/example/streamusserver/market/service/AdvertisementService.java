@@ -14,11 +14,11 @@ public interface AdvertisementService {
 
     AdvertisementSearchResponseDto search(String query, int itemId);
 
-    AdvertisementSearchResponseDto preload(long itemId);
+    AdvertisementSearchResponseDto preload(long itemId, long userId);
 
-    AdvertisementSearchResponseDto preload(long itemId, long ownerId);
+    AdvertisementSearchResponseDto preloadForUser(long itemId, long ownerId);
 
-    AdvertisementResponseDto getAdsObj(long itemId);
+    AdvertisementResponseDto getAdsObj(long itemId, long userId);
 
     AdvertisementResponseDto likeAdvertisement(Long advertisementId, Long userId);
 

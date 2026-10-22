@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -169,7 +170,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return response;
     }
 
-    public AdvertisementSearchResponseDto preload(long itemId, long ownerId) {
+    public AdvertisementSearchResponseDto preloadForUser(long itemId, long ownerId) {
 
         UserProfile userProfile = userProfileService.findById(ownerId).get();
 
@@ -229,43 +230,63 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return response;
     }
     @Override
-    public AdvertisementSearchResponseDto preload(long itemId) {
+    public AdvertisementSearchResponseDto preload(long itemId, long userId) {
 
         List<Advertisement> items;
 
         if (itemId == 0) {
-            // առաջին բեռնում (ամենավերջին item-ները)
             items = repository.findLatest(PageRequest.of(0, LIMIT));
         } else {
-            // pagination (cursor-based)
             items = repository.findNext(itemId, PageRequest.of(0, LIMIT));
         }
 
-        AdvertisementSearchResponseDto response = new AdvertisementSearchResponseDto();
+        AdvertisementSearchResponseDto response =
+                new AdvertisementSearchResponseDto();
 
         response.setError(false);
-        response.setQuery(""); // preload → query չկա
+        response.setQuery("");
         response.setItemCount(items.size());
 
-        // 🔥 cursor update
         if (items.isEmpty()) {
             response.setItemId(itemId);
-        } else {
-            response.setItemId(items.get(items.size() - 1).getId());
+            response.setItems(mapper.toDtoList(items));
+            return response;
         }
 
+        // Cursor update
+        response.setItemId(items.get(items.size() - 1).getId());
+
+        // Ստանում ենք բոլոր advertisement ID-ները
+        List<Long> advertisementIds = items.stream()
+                .map(Advertisement::getId)
+                .toList();
+
+        // Մեկ հարցմամբ ստանում ենք տվյալ user-ի լայքած հայտարարությունները
+        Set<Long> likedIds = new HashSet<>(
+                advertisementLikeRepository.findLikedAdvertisementIds(
+                        userId, advertisementIds
+                )
+        );
+
         // DTO mapping
-        response.setItems(mapper.toDtoList(items));
+        List<AdvertisementResponseDto> dtos = mapper.toDtoList(items);
+
+        // Յուրաքանչյուր DTO-ի համար սահմանում ենք liked արժեքը
+        for (AdvertisementResponseDto dto : dtos) {
+            dto.setLike(likedIds.contains(dto.getId()));
+        }
+
+        response.setItems(dtos);
 
         return response;
     }
 
     @Override
-    public AdvertisementResponseDto getAdsObj(long itemId) {
+    public AdvertisementResponseDto getAdsObj(long itemId, long userId) {
         Advertisement advertisement = repository.findById(itemId).get();
-        System.out.println(advertisement.getLocation());
+        System.out.println(advertisement.getOwner().getId());
         AdvertisementResponseDto dto = mapper.toDto(advertisement);
-        System.out.println(dto.getLocation());
+        System.out.println(dto.getOwnerId());
 
         return dto;
     }
