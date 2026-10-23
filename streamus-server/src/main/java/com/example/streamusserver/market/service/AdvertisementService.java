@@ -18,7 +18,7 @@ public interface AdvertisementService {
 
     AdvertisementSearchResponseDto preloadForUser(long itemId, long ownerId);
 
-    AdvertisementResponseDto getAdsObj(long itemId, long userId);
+    AdvertisementResponseDto getAdsObj(long itemId);
 
     AdvertisementResponseDto likeAdvertisement(Long advertisementId, Long userId);
 

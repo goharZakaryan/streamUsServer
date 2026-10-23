@@ -81,10 +81,9 @@ public class AdvertisementController {
 
     @PostMapping("/ads/obj")
     public AdvertisementResponseDto getAdsObj(
-            @RequestParam(value = "id") long itemId,
-            @RequestParam long userId) {
+            @RequestParam(value = "id") long itemId) {
 
-        return advertisementService.getAdsObj(itemId,userId);
+        return advertisementService.getAdsObj(itemId);
     }
 
     @PostMapping("/ads/{advertisementId}/like")
