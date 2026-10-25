@@ -26,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -70,30 +71,37 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     public AdvertisementResponseDto likeAdvertisement(Long advertisementId, Long userId) {
 
-        if (advertisementLikeRepository
-                .existsByAdvertisementIdAndUserId(advertisementId, userId)) {
-            return new AdvertisementResponseDto(true);
+        // Ստուգում ենք՝ արդյոք արդեն հավանել է
+        Optional<AdvertisementLike> existingLike =
+                advertisementLikeRepository
+                        .findByAdvertisementIdAndUserId(advertisementId, userId);
+
+        if (existingLike.isPresent()) {
+            // Եթե արդեն հավանել է, հեռացնում ենք like-ը
+            advertisementLikeRepository.delete(existingLike.get());
+            return new AdvertisementResponseDto(false);
         }
 
+        // Գտնում ենք հայտարարությունը
         Advertisement advertisement = repository
                 .findById(advertisementId)
                 .orElseThrow(() -> new RuntimeException("Advertisement not found"));
 
+        // Գտնում ենք օգտատիրոջը
         UserProfile user = userProfileService
                 .findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Ավելացնում ենք like-ը
         AdvertisementLike like = new AdvertisementLike();
-
         like.setAdvertisement(advertisement);
         like.setUser(user);
         like.setLikedAt(LocalDateTime.now());
 
         advertisementLikeRepository.save(like);
+
         return new AdvertisementResponseDto(true);
-
     }
-
     @Override
     public CommonResponse update(long itemId, String accessToken, Long accountId) {
         return null;
@@ -285,9 +293,11 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public AdvertisementResponseDto getAdsObj(long itemId) {
         Advertisement advertisement = repository.findById(itemId).get();
         System.out.println(advertisement.getOwner().getId());
-        AdvertisementResponseDto dto = mapper.toDto(advertisement);
-        System.out.println(dto.getOwnerId());
 
+        AdvertisementResponseDto dto = mapper.toDto(advertisement);
+        dto.setLike(advertisementLikeRepository
+                .existsByAdvertisementIdAndUserId(advertisement.getId(), advertisement.getOwner().getId()));
+        System.out.println(dto.isLike());
         return dto;
     }
 
