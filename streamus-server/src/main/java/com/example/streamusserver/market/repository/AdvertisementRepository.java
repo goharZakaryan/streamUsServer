@@ -12,9 +12,19 @@ import java.util.List;
 
 public interface AdvertisementRepository extends JpaRepository<Advertisement, Long> {
 
-    @Query("SELECT m FROM Advertisement m WHERE LOWER(m.title) LIKE LOWER(CONCAT('%', :query, '%')) AND m.id < :itemId ORDER BY m.id DESC")
-    List<Advertisement> search(@Param("query") String query, @Param("itemId") int itemId);
-
+    @Query("""
+    SELECT m FROM Advertisement m
+    WHERE (
+        LOWER(m.title) LIKE LOWER(CONCAT('%', :query, '%'))
+        OR LOWER(m.description) LIKE LOWER(CONCAT('%', :query, '%'))
+    )
+    AND m.id > :itemId
+    ORDER BY m.id DESC
+    """)
+    List<Advertisement> search(
+            @Param("query") String query,
+            @Param("itemId") int itemId
+    );
     @Query("SELECT m FROM Advertisement m WHERE m.id < :itemId ORDER BY m.id DESC")
     List<Advertisement> findAllWithPagination(@Param("itemId") int itemId);
 
