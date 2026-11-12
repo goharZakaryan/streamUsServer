@@ -106,10 +106,10 @@ public class GuestsServiceImpl implements GuestsService {
                 .map(guest -> {
                     GuestDto guestDto = new GuestDto();
                     guestDto.setId(guest.getId());
+                    guestDto.setGuestUserPhoto(guest.getGuestUserId().getPhotoUrl());
                     guestDto.setViewed(guest.getViewed());
                     guestDto.setGuestUserFullname(guest.getGuestUserFullname());
                     guestDto.setGuestUserUsername(guest.getGuestUserUsername());
-                    guestDto.setGuestUserPhoto(guest.getGuestUserPhoto());
                     guestDto.setGuestTo(guest.getGuestTo().getId()); // Assuming guestTo is a UserProfile
                     guestDto.setGuestUserId(guest.getGuestUserId().getId()); // Assuming guestUserId is a UserProfile
                     guestDto.setVerify(guest.getVerify());
