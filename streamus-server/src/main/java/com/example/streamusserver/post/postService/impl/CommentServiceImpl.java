@@ -134,7 +134,7 @@ public class CommentServiceImpl implements CommentService {
                 Long receiverId = current.getUser().getId();
 
                 if (!receiverId.equals(user.getId())
-                        && !notifiedUsers.contains(receiverId)) {
+                        && !notifiedUsers.contains(receiverId)|| receiverId.equals(post.getAccount().getId())) {
 
                     notificationService.createReplyNotification(
                             user,
