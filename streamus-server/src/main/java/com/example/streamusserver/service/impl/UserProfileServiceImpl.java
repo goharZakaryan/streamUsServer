@@ -265,12 +265,20 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     public List<MediaItemDTO> getUserMedia(Long userId, int page, int size, String mediaType) {
         List<MediaItem> mediaItems = new ArrayList<>();
-        if (mediaType.equalsIgnoreCase(ImageType.PHOTO.name())) {
-            mediaItems = mediaItemRepository.findByPostAccountIdAndType(userId, ImageType.PHOTO);
+        if (!mediaType.equalsIgnoreCase(ImageType.MUSIC.name())) {
 
-        } else if (mediaType.equalsIgnoreCase(ImageType.MUSIC.name())){
-            mediaItems = mediaItemRepository.findByPostAccountIdAndType(userId, ImageType.MUSIC);
 
+            mediaItems = mediaItemRepository.findByPostAccountIdAndTypeIn(
+                    userId,
+                    List.of(ImageType.PHOTO, ImageType.VIDEO)
+            );
+
+        } else  {
+
+            mediaItems = mediaItemRepository.findByPostAccountIdAndType(
+                    userId,
+                    ImageType.MUSIC
+            );
         }
         // Filter by media type (e.g., 1 for images, 2 for videos)
 

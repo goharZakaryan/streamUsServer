@@ -15,4 +15,6 @@ public interface MediaItemRepository extends JpaRepository<MediaItem, Long> {
 
     List<MediaItem> findByPostAccountIdAndType(Long post_account_id, ImageType type);
     List<MediaItem> findByType( ImageType type);
+
+    List<MediaItem> findByPostAccountIdAndTypeIn(Long userId, List<ImageType> photo);
 }
